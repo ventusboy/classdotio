@@ -45,7 +45,7 @@ function load() {
             });
             //console.log(completedArray);
 
-            update();
+            update(classes);
         }
     }
     xhr.setRequestHeader('Accept', 'application/json');
@@ -132,7 +132,7 @@ function sendData() {
 
     xhr.send(JSON.stringify(classes[classes.length - 1]));
 
-    update();
+    update(classes);
 }
 
 
@@ -272,95 +272,140 @@ class Search extends React.Component{
             value: ''
         }
         this.search=this.search.bind(this)
+        this.process=this.process.bind(this)
     }
 
     search(event){
-        this.setState({
-            value: event.target.value
-        });
+       // this.setState({
+       //     value: event.target.value
+       // });
+       
+        this.props.changeSearch(event.target.value)
+        //console.log('val set to '+ this.state.value);
+        //this.process();
 
-        let searchClasses=classes.map((item)=>{
-            //console.log(item);
-            if(JSON.stringify(item).includes(this.state.value)){
-                console.log(item);
+
+    }
+
+    process(){
+        console.log('val set to '+ this.state.value);
+        let searchClasses=classes.filter((item)=>{
+            if(JSON.stringify(item).toLowerCase().includes(this.state.value.toLowerCase())){
+                //console.log('string is' + JSON.stringify(item));
                 return item;
             }
         });
-        update();
+
+        console.log('filtered');
+        console.log(searchClasses);
+        update(searchClasses);
     }
 
 
     render(){
         const bar=(
-            <input className="col-7 form-control" placeholder="Search" name="search" id="search" onChange={this.search} value={this.state.value}></input>
+            <input className="col-7 form-control" placeholder="Search" name="search" id="search" onChange={this.search} value={this.props.searchtext}></input>
         );
     return bar;
     }
 }
 
 
-function Classcard(props) {
-    const array = props.classes;
+class Classcard extends React.Component {
+    //const array = props.classes;
     //console.log(array);
+    constructor(props){
+        super(props);
+        this.state={
+            searchtext: ''
+        }
+        this.changeSearch=this.changeSearch.bind(this);
+    }
+
+    changeSearch(value){
+        this.setState({searchtext: value});
+    }
 
 
 
-    const items = array.map((item) =>
-
-
-
-        <div id={item.area + '-' + item.code} className={preReqsMet(item) + ' classCard col-10 container offset-1'}>
+    render(){
+        return (
             <div className="row">
-            <h3 className="col-4">{item.area + ' ' + item.code}</h3>
-            <h3 className="col-7">{item.name}</h3>
-            <img className="col-1" class="deletebtn" src="./assets/delete.svg"/>
-            </div>
-            <div className="row">
-            <h4 className="col-8">pre-reqs: <PreReqList pre={item.pre} /> </h4>
-            <h4 className="col-4">completed: {item.completed ? 'yes' : 'no'}</h4>
-            </div>
-            <div className="row">
-            <p className="col-12">description: the course you need to learn all about {item.name}</p>
-            </div>
-        </div>
-    );
-
-
-
-    return (
-        <div className="row">
-            <div className="col-3">
-                <div className="card ">
-                    <div className="card-header">
-                        <h1>Class Input</h1>
-                    </div>
-                    <div className="card-body">
-                        <Iform />
+                <div className="col-3">
+                    <div className="card ">
+                        <div className="card-header">
+                            <h1>Class Input</h1>
+                        </div>
+                        <div className="card-body">
+                            <Iform />
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div className="col-7">
-                <div className="card" style={{ height:'90vh'}}>
-                    <div className="d-flex card-header container align-items-center">
-                        
-                            <h1 className="col-4 ">Classes</h1>
-                            <Search/>
-                        
-                    </div>
-                    <div className="card-body container-fluid" style={{overflow:"scroll", overflowX:"hidden"}}>
-                        <div className="row">
-                            {items}
+                <div className="col-7">
+                    <div className="card" style={{ height:'90vh'}}>
+                        <div className="d-flex card-header container align-items-center">                           
+                                <h1 className="col-4 ">Classes</h1>
+                                <Search changeSearch={this.changeSearch} searchtext={this.state.searchtext}/>                           
+                        </div>
+                        <div className="card-body container-fluid" style={{overflow:"scroll", overflowX:"hidden"}}>
+                            <div className="row">                                
+                                <Truecard  list={this.props.list} searchtext={this.state.searchtext}/>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
+        );
+    }
+}
+
+class Truecard extends React.Component{
+    constructor(props){
+        super(props);
+        this.state={
+            list: this.props.list
+        }
+        console.log(this.props.list);
+    }
+
+    
+    render(){
+
+        let items=this.state.list.filter((item)=>{
+
+            if(JSON.stringify(item).toLowerCase().includes(this.props.searchtext.toLowerCase())){
+                console.log(item);
+                return item;
+            }
+            
+        });
 
 
-
+        let filteredItems = items.map((item) =>{
+            
+                return (
+            
+                    <div id={item.area + '-' + item.code} className={preReqsMet(item) + ' classCard col-10 container offset-1'}>
+                        <div className="row">
+                        <h3 className="col-4">{item.area + ' ' + item.code}</h3>
+                        <h3 className="col-7">{item.name}</h3>
+                        <img className="col-1" class="deletebtn" src="./assets/delete.svg"/>
+                        </div>
+                        <div className="row">
+                        <h4 className="col-8">pre-reqs: <PreReqList pre={item.pre} /> </h4>
+                        <h4 className="col-4">completed: {item.completed ? 'yes' : 'no'}</h4>
+                        </div>
+                        <div className="row">
+                        <p className="col-12">description: the course you need to learn all about {item.name}</p>
+                        </div>
+                    </div>
+                );
+            
+        });
         
-        </div>
-    );
 
+        return filteredItems;
+    }   
 }
 
 function PreReqList(props) {
@@ -406,7 +451,7 @@ function update(classList) {
 
 
     //console.log(classes);
-    ReactDOM.hydrate(<Classcard classes={classList} />, document.getElementById('root'));
+    ReactDOM.hydrate(<Classcard list={classList} />, document.getElementById('root'));
 
 }
 
