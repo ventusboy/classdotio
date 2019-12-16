@@ -273,18 +273,19 @@ class Search extends React.Component{
         }
         this.search=this.search.bind(this)
         this.process=this.process.bind(this)
+        this.onKeyDown=this.onKeyDown.bind(this);
     }
 
     search(event){
-       // this.setState({
-       //     value: event.target.value
-       // });
-       
-        this.props.changeSearch(event.target.value)
-        //console.log('val set to '+ this.state.value);
-        //this.process();
+        this.props.changeSearch(event.target.value);
+        //if(event.keyCode=='BACKSPACE')
+        //console.log('backspace');
+    }
 
-
+    onKeyDown(e){
+        if (e.keyCode === 8||e.key =='Backspace') {
+         console.log('deleted');
+        }
     }
 
     process(){
@@ -304,7 +305,15 @@ class Search extends React.Component{
 
     render(){
         const bar=(
-            <input className="col-7 form-control" placeholder="Search" name="search" id="search" onChange={this.search} value={this.props.searchtext}></input>
+            <input 
+            className="col-7 form-control" 
+            placeholder="Search" 
+            name="search"
+            id="search" 
+            onChange={this.search} 
+            value={this.props.searchtext}
+            onkeydown={this.onKeyDown}
+            ></input>
         );
     return bar;
     }
@@ -317,14 +326,46 @@ class Classcard extends React.Component {
     constructor(props){
         super(props);
         this.state={
-            searchtext: ''
+            searchtext: '',
+            list: this.props.list,
+
         }
         this.changeSearch=this.changeSearch.bind(this);
+        this.onDelete=this.onDelete.bind(this);
+        
     }
 
     changeSearch(value){
         this.setState({searchtext: value});
+        var items;
+
+        if(value!=''){
+
+            this.setState({list: this.props.list.filter((item)=>{
+
+                    if(Object.values(item).toString().toLowerCase().includes(value.toLowerCase())){
+                        console.log(Object.values(item));
+                        return item;
+                    }
+                    
+                })
+            });
+        }
+        else{
+            this.setState({list: this.props.list});
+        }
     }
+
+    onDelete(obj){
+        console.log('delete!');
+        console.log(obj);
+        //console.log(classes);
+        //this.setState({list: this.state.list.splice(this.state.list.indexOf(obj,1))});
+        remove(obj.id);
+        
+    }
+
+    
 
 
 
@@ -349,7 +390,7 @@ class Classcard extends React.Component {
                         </div>
                         <div className="card-body container-fluid" style={{overflow:"scroll", overflowX:"hidden"}}>
                             <div className="row">                                
-                                <Truecard  list={this.props.list} searchtext={this.state.searchtext}/>
+                                <Truecard  list={this.state.list} searchtext={this.state.searchtext} delete={this.onDelete}/>
                             </div>
                         </div>
                     </div>
@@ -364,48 +405,73 @@ class Truecard extends React.Component{
         super(props);
         this.state={
             list: this.props.list
-        }
+        };
         console.log(this.props.list);
+        this.removeClass=this.removeClass.bind(this);
+    }
+    
+    removeClass(obj){
+        this.props.delete(obj);
+        
     }
 
     
     render(){
 
-        let items=this.state.list.filter((item)=>{
-
-            if(JSON.stringify(item).toLowerCase().includes(this.props.searchtext.toLowerCase())){
-                console.log(item);
-                return item;
-            }
-            
-        });
-
-
-        let filteredItems = items.map((item) =>{
-            
-                return (
-            
-                    <div id={item.area + '-' + item.code} className={preReqsMet(item) + ' classCard col-10 container offset-1'}>
-                        <div className="row">
-                        <h3 className="col-4">{item.area + ' ' + item.code}</h3>
-                        <h3 className="col-7">{item.name}</h3>
-                        <img className="col-1" class="deletebtn" src="./assets/delete.svg"/>
-                        </div>
-                        <div className="row">
-                        <h4 className="col-8">pre-reqs: <PreReqList pre={item.pre} /> </h4>
-                        <h4 className="col-4">completed: {item.completed ? 'yes' : 'no'}</h4>
-                        </div>
-                        <div className="row">
-                        <p className="col-12">description: the course you need to learn all about {item.name}</p>
-                        </div>
-                    </div>
-                );
+        let filteredItems = this.props.list.map((item) =>{
+            console.log('loading '+ item.name);
+            return <Singlecard delete={this.removeClass} item2={item}/>
             
         });
         
 
         return filteredItems;
     }   
+}
+
+class Singlecard extends React.Component{
+    
+    constructor(props){
+        super(props);
+        console.log(this.props.item2);
+        this.state=this.props.item2;
+        this.onDelete=this.onDelete.bind(this);
+        
+        //this.onDelete=this.onDelete.bind(this);
+       // this.setState({deleted: this.prop.item});
+    }
+
+    /*onDelete(event){
+        this.props.delete(event.target);
+    }*/
+
+    onDelete(){
+        console.log('item');
+        //this.setState()
+        this.props.delete(this.props.item2);
+    }
+
+    render(){
+        console.log(this.props.item2.name);
+        var obj= this.props.item2;
+        
+        return(
+            <div id={obj.area + '-' + obj.code} className={preReqsMet(obj) + ' classCard col-10 container offset-1'}>
+                <div className="row">
+                    <h3 className="col-4">{obj.area + ' ' + obj.code}</h3>
+                    <h3 className="col-7">{obj.name}</h3>
+                    <img className="col-1" class="deletebtn" src="./assets/delete.svg" onClick={()=>{this.onDelete()}}/>
+                    </div>
+                    <div className="row">
+                    <h4 className="col-8">pre-reqs: <PreReqList pre={obj.pre} /> </h4>
+                    <h4 className="col-4">completed: {obj.completed ? 'yes' : 'no'}</h4>
+                    </div>
+                    <div className="row">
+                    <p className="col-12">description: the course you need to learn all about {obj.name}</p>
+                </div>
+            </div>
+        );
+    }
 }
 
 function PreReqList(props) {
@@ -433,11 +499,29 @@ function navigateTo(obj){
     elmnt.scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"});
 }
 
+function remove(id){
+    console.log('id is '+ id);
+    
+    let classes2=classes.filter(
+        (item)=>{
+            if(item.id!=id){
+                console.log(item);
 
+                return item;
+            }
+
+        }
+    );
+    console.log(classes2);
+
+    update(classes2);
+}
 
 
 
 function update(classList) {
+
+    console.log(classList);
 
     //let classes=JSON.parse(classes);
 
@@ -451,7 +535,7 @@ function update(classList) {
 
 
     //console.log(classes);
-    ReactDOM.hydrate(<Classcard list={classList} />, document.getElementById('root'));
+    ReactDOM.render(<Classcard list={classList} />, document.getElementById('root'));
 
 }
 
