@@ -73,17 +73,13 @@ $(document).ready(function () {
     // update(); 
 
 });
-//classes = JSON.parse(localStorage.getItem('classstorage'));
 
-
-// $('#classform button').click(function (e) {
 function sendData() {
-    // e.preventDefault();
+    
     let prereqs = [];
-
-    //console.log(classes);
+    
     let name = $('#name').val().trim();
-    //console.log(name);
+    
     let preclasscode = $('#classcode').val().trim(' ').replace(/\s/g,'');
     let classcode = preclasscode.substring(3, preclasscode.length);
     let area = preclasscode.substring(0, 3).toUpperCase();
@@ -96,11 +92,9 @@ function sendData() {
         if(str.length%7!=0||str.length==0){
            return null;
         }
-
         //console.log('str is'+str);
         return str.slice(0,3)+' '+str.slice(3,str.length);
     });
-
 
     prereqs=prereqs.filter((e)=>{
         return e
@@ -108,9 +102,7 @@ function sendData() {
 
     console.log(prereqs);
 
-    ////console.log(classes);
     classes.push(createclass(name, area, classcode, completed, prereqs));
-    //ReactDOM.render(<Classcard classes={classes} />, document.getElementById('root'));
     $('#name').val('');
     $('#classcode').val('');
     $('#completed').checked = false;
@@ -120,7 +112,6 @@ function sendData() {
     let xhr = new XMLHttpRequest();
     xhr.open('POST', '/submit', true);
 
-    //console.log('yeet');
     xhr.onreadystatechange = function () {
         if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
             //console.log('response is ' + xhr.responseText);
@@ -134,12 +125,6 @@ function sendData() {
 
     update(classes);
 }
-
-
-//});
-
-
-
 
 
 const initstate = {
@@ -180,16 +165,12 @@ class Iform extends React.Component {
     handleSubmit(event) {
         event.preventDefault();
         if (this.validate()) {
-            //console.log('valid!');
-            sendData();
-            // this.state=initstate;
-            ////console.log(this.state);
-            this.setState({ name: '' });
-            this.setState({ classcode: '' });
-            this.setState({ prereqs: '' });
-
-            //setInterval(update,1000);
+            this.props.newclass();
         }
+        this.setState({ name: '' });
+        this.setState({ classcode: '' });
+        this.setState({ prereqs: '' });
+   
     }
 
     validate() {
@@ -328,10 +309,12 @@ class Classcard extends React.Component {
         this.state={
             searchtext: '',
             list: this.props.list,
+            oglist: this.props.list
 
         }
         this.changeSearch=this.changeSearch.bind(this);
         this.onDelete=this.onDelete.bind(this);
+        this.newclass=this.newclass.bind(this);
         
     }
 
@@ -341,7 +324,7 @@ class Classcard extends React.Component {
 
         if(value!=''){
 
-            this.setState({list: this.props.list.filter((item)=>{
+            this.setState({list: this.state.oglist.filter((item)=>{
 
                     if(Object.values(item).toString().toLowerCase().includes(value.toLowerCase())){
                         console.log(Object.values(item));
@@ -352,7 +335,7 @@ class Classcard extends React.Component {
             });
         }
         else{
-            this.setState({list: this.props.list});
+            this.setState({list: this.state.oglist});
         }
     }
 
@@ -360,8 +343,93 @@ class Classcard extends React.Component {
         console.log('delete!');
         console.log(obj);
         //console.log(classes);
-        //this.setState({list: this.state.list.splice(this.state.list.indexOf(obj,1))});
-        remove(obj.id);
+        const templist=this.state.oglist.filter((item)=>{
+            if(obj.id!=item.id){
+                return item;
+            }
+            else{
+                
+                let xhr = new XMLHttpRequest();
+                xhr.open('POST', '/delete', true);
+
+                xhr.onreadystatechange = function () {
+                    if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
+                        //console.log('response is ' + xhr.responseText);
+                    }
+                }
+                //console.log(classes[classes.length - 1]);
+                xhr.setRequestHeader("Content-type", "application/json");
+
+
+                xhr.send(JSON.stringify(item));
+            }
+        });
+
+        this.setState({oglist: templist});
+        this.setState({list: templist});
+       
+        
+    }
+
+    newclass(){
+        
+            //console.log('valid!');
+            //sendData();
+            // this.state=initstate;
+            ////console.log(this.state);
+
+        let prereqs = [];
+        let classes=Object.assign([],this.state.oglist);
+
+        let name = $('#name').val().trim();
+        
+        let preclasscode = $('#classcode').val().trim(' ').replace(/\s/g,'');
+        let classcode = preclasscode.substring(3, preclasscode.length);
+        let area = preclasscode.substring(0, 3).toUpperCase();
+        let completed = $('#completed').prop('checked');
+        prereqs = $('#prereqs').val().toUpperCase().trim().split(',');
+
+        prereqs=prereqs.map((str)=>{
+            str=str.replace(/\s/g,'');
+
+            if(str.length%7!=0||str.length==0){
+            return null;
+            }
+            //console.log('str is'+str);
+            return str.slice(0,3)+' '+str.slice(3,str.length);
+        });
+
+        prereqs=prereqs.filter((e)=>{
+            return e
+        });
+
+        console.log(prereqs);
+
+        classes.push(createclass(name, area, classcode, completed, prereqs));
+        $('#name').val('');
+        $('#classcode').val('');
+        $('#completed').checked = false;
+        $('#prereqs').val('');
+        //update();
+
+        let xhr = new XMLHttpRequest();
+        xhr.open('POST', '/submit', true);
+
+        xhr.onreadystatechange = function () {
+            if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
+                //console.log('response is ' + xhr.responseText);
+            }
+        }
+        //console.log(classes[classes.length - 1]);
+        xhr.setRequestHeader("Content-type", "application/json");
+
+
+        xhr.send(JSON.stringify(classes[classes.length - 1]));
+        
+
+        //setInterval(update,1000);
+        this.setState({oglist: classes});
+        this.setState({list: classes});
         
     }
 
@@ -378,7 +446,7 @@ class Classcard extends React.Component {
                             <h1>Class Input</h1>
                         </div>
                         <div className="card-body">
-                            <Iform />
+                            <Iform newclass={this.newclass} />
                         </div>
                     </div>
                 </div>

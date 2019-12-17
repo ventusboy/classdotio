@@ -65,12 +65,23 @@ app.post('/submit',(req,res)=>{
   //con.connect(function(err) {
     //if (err) throw err;
     console.log("Connected!");
-    var sql = "INSERT INTO classdotiodata1 (name, code, area, completed, pre, color, rank) VALUES ?";
+    let sql = "INSERT INTO classdotiodata1 (name, code, area, completed, pre, color, rank) VALUES ?";
     con.query(sql,[values],function(err,result){
       if(err) throw err;
       console.log("1 record inserted");
     });
   //});
+});
+
+app.post('/delete',(req,res)=>{
+
+  console.log('deleting '+req.body.id);
+  console.log(req.body);
+  let sql="DELETE FROM classdotiodata1 WHERE id="+req.body.id+';';
+  con.query(sql,function(err,result){
+    if(err) throw err;
+    console.log('1 record deleted');
+  });
 });
 
 
