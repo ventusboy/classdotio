@@ -15,7 +15,7 @@ function createclass(name, area, code, completed, prereqs) {
         area: area,
         completed: completed,
         pre: prereqs,
-        color: 'red',
+        color: (!completed)?'red':'blue' ,
         rank: code,
     };
 
@@ -315,6 +315,7 @@ class Classcard extends React.Component {
         this.changeSearch=this.changeSearch.bind(this);
         this.onDelete=this.onDelete.bind(this);
         this.newclass=this.newclass.bind(this);
+        this.duplicate=this.duplicate.bind(this);
         
     }
 
@@ -405,15 +406,29 @@ class Classcard extends React.Component {
 
         console.log(prereqs);
 
-        classes.push(createclass(name, area, classcode, completed, prereqs));
+        let xhr = new XMLHttpRequest();
+
+        let newitem=createclass(name, area, classcode, completed, prereqs);
+
+        if(this.duplicate(newitem)){
+            xhr.open('POST', '/update', true);
+            console.log(newitem.id);
+        }
+        else{
+            classes.push(newitem);
+            this.setState({oglist: classes});
+            this.setState({list: classes});
+            xhr.open('POST', '/submit', true);
+        }
+        
         $('#name').val('');
         $('#classcode').val('');
         $('#completed').checked = false;
         $('#prereqs').val('');
         //update();
 
-        let xhr = new XMLHttpRequest();
-        xhr.open('POST', '/submit', true);
+        
+        
 
         xhr.onreadystatechange = function () {
             if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
@@ -422,17 +437,34 @@ class Classcard extends React.Component {
         }
         //console.log(classes[classes.length - 1]);
         xhr.setRequestHeader("Content-type", "application/json");
+        console.log(newitem);
 
-
-        xhr.send(JSON.stringify(classes[classes.length - 1]));
+        xhr.send(JSON.stringify(newitem));
         
-
-        //setInterval(update,1000);
-        this.setState({oglist: classes});
-        this.setState({list: classes});
+        
         
     }
 
+    duplicate(item){
+        var bool = false;
+        item.id=0;
+        let templist=this.state.oglist.map((olditem)=>
+        {
+                if(item.area==olditem.area&&item.code==olditem.code){
+                    item.id=olditem.id;
+                    bool=true;
+                    return item;
+                    
+                }
+                else{
+                    return olditem
+                }
+        });
+        this.setState({oglist: templist});
+        this.setState({list: templist});
+        
+        return item.id;
+    }
     
 
 

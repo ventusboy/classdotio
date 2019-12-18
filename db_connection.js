@@ -84,5 +84,20 @@ app.post('/delete',(req,res)=>{
   });
 });
 
+app.post('/update', (req,res)=>{
+
+  console.log('updating');
+  console.log(req.body);
+  let json=req.body;
+  
+  let data= [json.name, json.completed, JSON.stringify(json.pre), json.color, json.rank, json.id];
+  let sql="UPDATE classdotiodata1 SET name = ? , completed = ? , pre = ? , color = ? , rank = ? WHERE id = ? ; ";
+  con.query(sql,data,function(err,result, fields){
+    if(err) throw err;
+    console.log('updated:');
+    console.log(result);
+  });
+});
+
 
 
