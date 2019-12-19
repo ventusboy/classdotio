@@ -57,6 +57,21 @@
 
     }
 
+    .drop-down{
+        //background: rebeccapurple;
+        //position: absolute;
+        //z-index: 2;
+        //border:  1px solid black;
+        //border-top: 0px;
+        //width: 100%;
+
+        //box-shadow: 2px 2px;
+        //box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 8px rgba(126, 239, 104, 0.6);
+        &:hover{
+            background: skyblue;
+        }
+    }
+
     input{
         border-radius: 5px;
     }

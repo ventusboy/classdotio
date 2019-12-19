@@ -70,6 +70,13 @@ app.post('/submit',(req,res)=>{
       if(err) throw err;
       console.log("1 record inserted");
     });
+    let vals2=[[json.name,json.code,json.area,JSON.stringify(json.pre),json.area+json.code]];
+    let sql2="INSERT INTO allclasses (name, code, area, pre, universalid) VALUES ?"
+    con.query(sql2, [vals2],function(err,result){
+      if(err) throw err;
+      console.log('1 record inserted into universal DB');
+
+    });
   //});
 });
 
@@ -97,6 +104,13 @@ app.post('/update', (req,res)=>{
     console.log('updated:');
     console.log(result);
   });
+
+  /*let data2=[json.name,json.code,json.area,JSON.stringify(json.pre),json.area+json.code]
+  con.query(sql2, [vals2],function(err,result){
+    if(err) throw err;
+    console.log('1 record inserted into universal DB');
+
+  });*/
 });
 
 

@@ -154,6 +154,7 @@ class Iform extends React.Component {
         this.setState({
             name: event.target.value
         });
+        //dropdownlist={props.list});
     }
 
     codeChange(event) {
@@ -210,12 +211,13 @@ class Iform extends React.Component {
 
     render() {
         return (
-            <form id="classform" className="" onSubmit={this.handleSubmit} >
+            <form id="classform" className="" onSubmit={this.handleSubmit} autocomplete="new-password" >
                 <div className="form-group">
                     <label htmlFor="name">name</label>
                     <br></br>
-                    <input type="text" id="name" className={this.state.nameError ? 'form-control incorrect' : 'form-control'} value={this.state.name} onChange={this.handleChange}></input>
+                    <input type="text" id="name" name={Date.now()} autocomplete="new-password" className={this.state.nameError ? 'form-control incorrect' : 'form-control'} value={this.state.name} onChange={this.handleChange}></input>
                     <div className="errorMsg">{this.state.valid ? '' : this.state.nameError}</div>
+                    {this.state.name!=''?<Dropdown list={this.props.list} name={this.state.name}/>:''}
                 </div>
                 <div className="form-group">
                     <label htmlFor="classcode">code</label>
@@ -246,6 +248,36 @@ class Iform extends React.Component {
         );
     }
 }
+
+function Dropdown(props){
+
+    //const items=Array();
+    let filtereditems=props.list.filter((item)=>{
+        
+        if(item.name.toLowerCase().includes(props.name.toLowerCase())){
+            return item.name;
+        }
+            
+    });
+
+    console.log(filtereditems);
+
+    const items=filtereditems.map((item)=>{
+        
+        if(item.name.toLowerCase().includes(props.name.toLowerCase())){
+            return <p style={{marginBottom: "0"}} className="drop-down"><a>{item.name}</a></p>
+        }
+            
+    });
+    console.log(items);
+
+    return(
+        <div className="form-control" style={{height: "fit-content", position: "absolute", width:"85%"}}>
+            {items}
+        </div>
+    );
+}
+
 class Search extends React.Component{
     constructor(props){
         super(props)
@@ -478,7 +510,7 @@ class Classcard extends React.Component {
                             <h1>Class Input</h1>
                         </div>
                         <div className="card-body">
-                            <Iform newclass={this.newclass} />
+                            <Iform newclass={this.newclass} list={this.state.oglist} />
                         </div>
                     </div>
                 </div>
@@ -491,6 +523,7 @@ class Classcard extends React.Component {
                         <div className="card-body container-fluid" style={{overflow:"scroll", overflowX:"hidden"}}>
                             <div className="row">                                
                                 <Truecard  list={this.state.list} searchtext={this.state.searchtext} delete={this.onDelete}/>
+                                
                             </div>
                         </div>
                     </div>

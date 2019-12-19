@@ -61,6 +61,10 @@ input {
   text-align: right;
 }
 
+.drop-down:hover {
+  background: skyblue;
+}
+
 input {
   border-radius: 5px;
 }
