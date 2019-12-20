@@ -113,5 +113,16 @@ app.post('/update', (req,res)=>{
   });*/
 });
 
+app.get('/universaldb',function(req,res){
+  let sql='SELECT * FROM allclasses';
+  con.query(sql,(err, result)=>{
+    if(err) throw err;
+
+    let payload=JSON.stringify(result);
+    console.log(payload);
+    res.send(payload);
+  })
+})
+
 
 

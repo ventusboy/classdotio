@@ -147,6 +147,8 @@ class Iform extends React.Component {
         this.codeChange = this.codeChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.validate = this.validate.bind(this);
+        this.onFocus=this.onFocus.bind(this);
+        this.onBlur=this.onBlur.bind(this);
 
     }
 
@@ -209,20 +211,52 @@ class Iform extends React.Component {
 
     }
 
+    onFocus(){
+        //
+        //$(document).ready(()=>{
+            $('.dropdown-container').removeClass("hide");
+            console.log(Date.now());
+            $("#name").keyup(function keymove(e){
+                
+                if(e.which==40){
+                    console.log('yeet!');
+                }
+                //e.target.removeEventListener(e.type, keymove);
+            });
+
+            
+       // });
+    }
+
+    onBlur(){
+        $(document).ready(()=>{
+            $('.dropdown-container').addClass("hide");
+            $('#name').unbind("keyup");
+        });
+        
+    }
+
     render() {
         return (
             <form id="classform" className="" onSubmit={this.handleSubmit} autocomplete="new-password" >
-                <div className="form-group">
+                <div className="form-group" style={{position:"relative"}}>
                     <label htmlFor="name">name</label>
                     <br></br>
-                    <input type="text" id="name" name={Date.now()} autocomplete="new-password" className={this.state.nameError ? 'form-control incorrect' : 'form-control'} value={this.state.name} onChange={this.handleChange}></input>
+
+                    <input type="text" id="name" name={Date.now()} autocomplete="new-password" 
+                    className={this.state.nameError ? 'form-control incorrect' : 'form-control'} value={this.state.name} 
+                    onChange={this.handleChange} list="options" /*onFocus={this.onFocus} onBlur={this.onBlur}*/></input>
+
                     <div className="errorMsg">{this.state.valid ? '' : this.state.nameError}</div>
-                    {this.state.name!=''?<Dropdown list={this.props.list} name={this.state.name}/>:''}
+                    {this.state.name!=''?<Dropdown /*list={this.props.list} name={this.state.name}*//>:''}
                 </div>
                 <div className="form-group">
                     <label htmlFor="classcode">code</label>
                     <br></br>
-                    <input type="text" id="classcode" className={this.state.classcodeError ? 'incorrect' : 'form-control'} value={this.state.classcode} onChange={this.codeChange}></input>
+
+                    <input type="text" id="classcode" className={this.state.classcodeError ? 'incorrect' : 'form-control'}
+                     value={this.state.classcode} onChange={this.codeChange}></input>
+
                     <div className="errorMsg">{this.state.valid ? '' : this.state.classcodeError}</div>
                 </div>
 
@@ -252,11 +286,33 @@ class Iform extends React.Component {
 function Dropdown(props){
 
     //const items=Array();
-    let filtereditems=props.list.filter((item)=>{
+    let tofilter=[];
+    //tofilter=props.list;
+
+    var xhr=new XMLHttpRequest();
+    xhr.open('GET', '/universaldb', false);
+
+    xhr.onreadystatechange=function(){
         
-        if(item.name.toLowerCase().includes(props.name.toLowerCase())){
-            return item.name;
+        if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
+            //console.log('response is ' + xhr.responseText);
+            tofilter=JSON.parse(xhr.responseText);
+            console.log('requested');
+            console.log(tofilter);
         }
+    }
+    //xhr.timeout=4000;
+
+    xhr.setRequestHeader('Accept', 'application/json');
+    xhr.send();
+
+
+
+    let filtereditems=tofilter.filter((item)=>{
+        
+        //if(item.name.toLowerCase().includes(props.name.toLowerCase())){
+            return item.name;
+        //}
             
     });
 
@@ -264,18 +320,23 @@ function Dropdown(props){
 
     const items=filtereditems.map((item)=>{
         
-        if(item.name.toLowerCase().includes(props.name.toLowerCase())){
-            return <p style={{marginBottom: "0"}} className="drop-down"><a>{item.name}</a></p>
-        }
+        
+            return <option /*style={{marginBottom: "0"}} className="drop-down"><a>*/value={item.name}/*</a></p*/ />
+        
             
     });
     console.log(items);
+    if(items.length!=0){
+        return(
+            <datalist id="options" /*className="form-control dropdown-container" style={{height: "fit-content", position: "absolute", width:"100%", padding:"0px"}}*/>
+                {items}
+            </datalist>
+        );
+    }
+    else{
+        return '';
+    }
 
-    return(
-        <div className="form-control" style={{height: "fit-content", position: "absolute", width:"85%"}}>
-            {items}
-        </div>
-    );
 }
 
 class Search extends React.Component{

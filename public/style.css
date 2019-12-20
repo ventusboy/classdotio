@@ -50,19 +50,27 @@ input {
 }
 
 .errorMsg {
-  margin-left: 1vw;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
   -webkit-box-pack: left;
       -ms-flex-pack: left;
           justify-content: left;
-  width: 20vw;
+  width: 100%;
   text-align: right;
+  color: #ff0000;
 }
 
 .drop-down:hover {
   background: skyblue;
+}
+
+input::-webkit-calendar-picker-indicator {
+  display: none;
+}
+
+.hide {
+  display: none;
 }
 
 input {
