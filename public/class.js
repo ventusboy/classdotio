@@ -38,7 +38,11 @@ function load() {
             //console.log(classes);
 
             classes.forEach((item) => {
-                item.pre = JSON.parse(item.pre);
+                if(typeof item.pre!= 'string')
+                    item.pre = item.pre;
+                else
+                    item.pre = JSON.parse(item.pre);
+
                 if (item.completed) {
                     completedArray.push(item.area + ' ' + item.code);
                 }
@@ -438,7 +442,7 @@ class Classcard extends React.Component {
         console.log(obj);
         //console.log(classes);
         const templist=this.state.oglist.filter((item)=>{
-            if(obj.id!=item.id){
+            if(obj._id!=item._id){
                 return item;
             }
             else{
@@ -505,7 +509,7 @@ class Classcard extends React.Component {
 
         if(this.duplicate(newitem)){
             xhr.open('POST', '/update', true);
-            console.log(newitem.id);
+            //console.log(newitem._id);
         }
         else{
             classes.push(newitem);
@@ -540,11 +544,11 @@ class Classcard extends React.Component {
 
     duplicate(item){
         var bool = false;
-        item.id=0;
+       // item._id=0;
         let templist=this.state.oglist.map((olditem)=>
         {
                 if(item.area==olditem.area&&item.code==olditem.code){
-                    item.id=olditem.id;
+                    //item._id=olditem._id;
                     bool=true;
                     return item;
                     
@@ -556,7 +560,7 @@ class Classcard extends React.Component {
         this.setState({oglist: templist});
         this.setState({list: templist});
         
-        return item.id;
+        return bool;
     }
     
 
@@ -693,12 +697,12 @@ function navigateTo(obj){
     elmnt.scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"});
 }
 
-function remove(id){
-    console.log('id is '+ id);
+function remove(_id){
+    console.log('id is '+ _id);
     
     let classes2=classes.filter(
         (item)=>{
-            if(item.id!=id){
+            if(item._id!=_id){
                 console.log(item);
 
                 return item;
