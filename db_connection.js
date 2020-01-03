@@ -1,82 +1,53 @@
 require('dotenv').config();
+//var mysql = require('mysql');
 
-var mysql = require('mysql');
+//const serverless = require('serverless-http');
 const express=require('express');
 const bodyParser=require('body-parser');
 //const mongodb = require('mongodb');
 const MongoClient = require('mongodb').MongoClient;
-
+const path = require('path');
 const uri = "mongodb+srv://dbUser:"+process.env.DBPASSWORD+"@cluster0-8ixoa.mongodb.net/classdotiodb";
 const client = new MongoClient(uri, { useNewUrlParser: true ,useUnifiedTopology: true});
 client.connect((err)=>{if (err) console.log(err)});
 
-//console.log(process.env.DBPASSWORD);
-/*const client = new MongoClient;/*(uri, { 
-  useNewUrlParser: true,
-  useUnifiedTopology: true });
-  client.connect(err => {
-  const collection = client.db("classdotiodb").collection("classdotiodata");
-  // perform actions on the collection object
-  console.log('db_created!');
-  client.close();
-});*/
-
-
 
 app=express();
-app.set('view engine', 'ejs');
-app.set('views', './views');
+//app.set('view engine', 'ejs');
+//app.set('views', './views');
+app.use(express.static(path.join(__dirname,'public')));
 
-var con = mysql.createConnection({
+/*var con = mysql.createConnection({
   host: "localhost",
   user: "root",
   database: "classdotiodb"
   //password: "12345"
-});
+});*/
 
 
 
 
-app.listen(3000, function() {
-  console.log('Example app listening on port 3000!');
-});
+//app.listen(3000, function() {
+  //console.log('Example app listening on port 3000!');
+//});
 
-app.use(express.static('public'));
+app.use(express.static('src'));
 app.use(bodyParser.json());
 
-con.connect(function(err) {
+/*con.connect(function(err) {
   if (err) throw err;
   
 });
-
+*/
 app.get('/payload',function(req,res){
   var answer;
 
-  /*
-  con.query("SELECT * FROM classdotiodata1", function (err, result, fields) {
-    if (err) throw err;
-    //console.log(result);
-    answer=JSON.stringify(result);
-    //console.log(answer);
-    res.send(answer);
-    
-    
+  let collection=client.db("classdotiodb").collection("classdotiodata");
+  collection.find({}).toArray((err, result)=>{
+    if(err) throw err;
+    console.log(result);
+    res.send(JSON.stringify(result));
   });
-  */
-
-  
-    //if(err) throw err;
-
-    let collection=client.db("classdotiodb").collection("classdotiodata");
-    collection.find({}).toArray((err, result)=>{
-      if(err) throw err;
-      console.log(result);
-      res.send(JSON.stringify(result));
-      //client.close();
-    });
- // });
-  
-
 });
 
 
@@ -96,70 +67,33 @@ app.post('/submit',(req,res)=>{
   console.log(json.name);
 
   //mongodb test
-  /*const client = new MongoClient(uri, { 
-      useNewUrlParser: true,
-      useUnifiedTopology: true
-  });*/
+  let collection = client.db("classdotiodb").collection("classdotiodata");
+  console.log(json);
 
- 
-
- // client.connect(err => {
-    //if (err) throw err;
-    let collection = client.db("classdotiodb").collection("classdotiodata");
-    console.log(json);
-
-    collection.insertOne(json, function(err, res){
-      if (err) throw err;
-      console.log("1 document inserted");
-      
-    });
-
-    let collection2 = client.db("classdotiodb").collection("universaldb");
-    console.log(json);
-
-    collection2.find({area: json.area, code: json.code }).toArray((err,result)=>{
-      if (err) throw err;
-      if(result.length==0){
-        collection2.insertOne(json, function(err, res){
-          if (err) throw err;
-          console.log("1 document inserted in univeral db");
-          
-        });
-      }
-    });
-
+  collection.insertOne(json, function(err, res){
+    if (err) throw err;
+    console.log("1 document inserted");
     
+  });
 
-    // perform actions on the collection object
+  let collection2 = client.db("classdotiodb").collection("universaldb");
+  console.log(json);
 
-    console.log('db_updated!');
-    //client.close();
+  collection2.find({area: json.area, code: json.code }).toArray((err,result)=>{
+    if (err) throw err;
+    if(result.length==0){
+      collection2.insertOne(json, function(err, res){
+        if (err) throw err;
+        console.log("1 document inserted in univeral db");
+        
+      });
+    }
+  });
 
-  //});
-  
+  // perform actions on the collection object
 
-  /*
-  //end test
-  //var item=JSON.parse(req.body);
-  var values=[[json.name,json.code,json.area,json.completed,JSON.stringify(json.pre),json.color,json.rank]];
+  console.log('db_updated!');
 
-  //con.connect(function(err) {
-    //if (err) throw err;
-    console.log("Connected!");
-    let sql = "INSERT INTO classdotiodata1 (name, code, area, completed, pre, color, rank) VALUES ?";
-    con.query(sql,[values],function(err,result){
-      if(err) throw err;
-      console.log("1 record inserted");
-    });
-    let vals2=[[json.name,json.code,json.area,JSON.stringify(json.pre),json.area+json.code]];
-    let sql2="INSERT INTO allclasses (name, code, area, pre, universalid) VALUES ?"
-    con.query(sql2, [vals2],function(err,result){
-      if(err) throw err;
-      console.log('1 record inserted into universal DB');
-
-    });
-  //});
-  */
 });
 
 app.post('/delete',(req,res)=>{
@@ -173,14 +107,6 @@ app.post('/delete',(req,res)=>{
     console.log('deleted and yeeted');
 
   })
-  /*
-  console.log('deleting '+req.body._id);
-  console.log(req.body);
-  let sql="DELETE FROM classdotiodata1 WHERE id="+req.body._id+';';
-  con.query(sql,function(err,result){
-    if(err) throw err;
-    console.log('1 record deleted');
-  });*/
 });
 
 app.post('/update', (req,res)=>{
@@ -188,63 +114,42 @@ app.post('/update', (req,res)=>{
   console.log('updating');
   let json=req.body;
 
-  //client.connect(err => {
-    //if (err) throw err;
-    console.log(json._id);
-    let collection = client.db("classdotiodb").collection("classdotiodata");
-    let query={area: json.area, code: json.code};
+  
+  console.log(json._id);
+  let collection = client.db("classdotiodb").collection("classdotiodata");
+  let query={area: json.area, code: json.code};
 
-    let newvals={ $set: {
-      name: json.name,
-      completed: json.completed,
-      pre: JSON.stringify(json.pre),
-      color: json.color,
-      rank: json.rank
-    }};
+  let newvals={ $set: {
+    name: json.name,
+    completed: json.completed,
+    pre: JSON.stringify(json.pre),
+    color: json.color,
+    rank: json.rank
+  }};
 
-    collection.updateOne(query,newvals,function(err, res){
-      if (err) throw err;
-      console.log(newvals);
-      console.log("1 document updated");
-      
-    });
+  collection.updateOne(query,newvals,function(err, res){
+    if (err) throw err;
+    console.log(newvals);
+    console.log("1 document updated");
+    
+  });
 
-    let collection2 = client.db("classdotiodb").collection("universaldb");
-    console.log(json);
+  let collection2 = client.db("classdotiodb").collection("universaldb");
+  console.log(json);
 
-    collection2.updateOne(query,newvals,(err,result)=>{
-      if (err) throw err;
-      if(result.length==0){
-        collection2.insertOne(json, function(err, res){
-          if (err) throw err;
-          console.log("1 document inserted in univeral db");
-          
-        });
-      }
-    });
+  collection2.updateOne(query,newvals,(err,result)=>{
+    if (err) throw err;
+    if(result.length==0){
+      collection2.insertOne(json, function(err, res){
+        if (err) throw err;
+        console.log("1 document inserted in univeral db");
+        
+      });
+    }
+  });
     // perform actions on the collection object
 
     console.log('db_updated!');
-    //client.close();
-
-  //});
-  /*console.log(req.body);
-  let json=req.body;
-  
-  let data= [json.name, json.completed, JSON.stringify(json.pre), json.color, json.rank, json._id];
-  let sql="UPDATE classdotiodata1 SET name = ? , completed = ? , pre = ? , color = ? , rank = ? WHERE id = ? ; ";
-  con.query(sql,data,function(err,result, fields){
-    if(err) throw err;
-    console.log('updated:');
-    console.log(result);
-  });
-
-  /*let data2=[json.name,json.code,json.area,JSON.stringify(json.pre),json.area+json.code]
-  con.query(sql2, [vals2],function(err,result){
-    if(err) throw err;
-    console.log('1 record inserted into universal DB');
-
-  });*/
 });
 
 app.get('/universaldb',function(req,res){
@@ -257,17 +162,10 @@ app.get('/universaldb',function(req,res){
 
     res.send(payload);
   });
+});
 
-  /*
-  let sql='SELECT * FROM allclasses';
-  con.query(sql,(err, result)=>{
-    if(err) throw err;
-
-    let payload=JSON.stringify(result);
-    console.log(payload);
-    res.send(payload);
-  })*/
-})
+//module.exports.handler= serverless(app);
+app.listen(8080);
 
 
 

@@ -1,4 +1,5 @@
 import React from 'react';
+import ReactDOM from 'react-dom';
 import logo from './logo.svg';
 import './style.css';
 import $ from 'jquery';
@@ -287,12 +288,12 @@ class Iform extends React.Component {
 
     render() {
         return (
-            <form id="classform" className="" onSubmit={this.handleSubmit} autocomplete="new-password" >
+            <form id="classform" className="" onSubmit={this.handleSubmit} autoComplete="new-password" >
                 <div className="form-group" style={{position:"relative"}}>
                     <label htmlFor="name">name</label>
                     <br></br>
 
-                    <input type="text" id="name" name={Date.now()} autocomplete="new-password" 
+                    <input type="text" id="name" name={Date.now()} autoComplete="new-password" 
                     className={this.state.nameError ? 'form-control incorrect' : 'form-control'} value={this.state.name} 
                     onChange={this.handleChange} list="options" /*onFocus={this.onFocus} onBlur={this.onBlur}*/></input>
 
@@ -435,7 +436,7 @@ class Search extends React.Component{
             id="search" 
             onChange={this.search} 
             value={this.props.searchtext}
-            onkeydown={this.onKeyDown}
+            onKeyDown={this.onKeyDown}
             ></input>
         );
     return bar;
@@ -663,7 +664,7 @@ class Truecard extends React.Component{
 
         let filteredItems = this.props.list.map((item) =>{
             console.log('loading '+ item.name);
-            return <Singlecard delete={this.removeClass} item2={item}/>
+            return <Singlecard key={item.area.toString()+item.code.toString()} delete={this.removeClass} item2={item}/>
             
         });
         
@@ -701,9 +702,9 @@ class Singlecard extends React.Component{
         return(
             <div id={obj.area + '-' + obj.code} className={preReqsMet(obj) + ' classCard col-10 container offset-1'}>
                 <div className="row">
-                    <h3 className="col-4">{obj.area + ' ' + obj.code}</h3>
-                    <h3 className="col-7">{obj.name}</h3>
-                    <img className="col-1" class="deletebtn" src="./assets/delete.svg" onClick={()=>{this.onDelete()}}/>
+                    <h3 className="col-xl-4 col-sm-4">{obj.area + ' ' + obj.code}</h3>
+                    <h3 className="col-xl-7 col-sm-6">{obj.name}</h3>
+                    <img className="col-xl-1 col-sm-2 deletebtn d-flex justify-content-end"  src="./assets/delete.svg" onClick={()=>{this.onDelete()}}/>
                     </div>
                     <div className="row">
                     <h4 className="col-8">pre-reqs: <PreReqList pre={obj.pre} /> </h4>
@@ -730,7 +731,7 @@ function PreReqList(props) {
 
     const prereqs = preReqListParse.map((item) =>
 
-        <button type="button" onClick={navigateTo} className="btn btn-secondary" style={ {marginRight: "3px"}} value={item.replace(' ','-')} >{item} </button>
+        <button type="button"  key={item.toString()} onClick={navigateTo} className="btn btn-secondary" style={ {marginRight: "3px"}} value={item.replace(' ','-')} >{item} </button>
     );
     return prereqs;
 }
@@ -779,6 +780,7 @@ function update(classList) {
 
     //console.log(classes);
     //ReactDOM.render(<Classcard list={classList} />, document.getElementById('root'));
+    ReactDOM.render(<Classcard list={classList} />, document.getElementById('root'));
 
 }
 
