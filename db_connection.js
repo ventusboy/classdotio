@@ -50,14 +50,14 @@ app.get('/payload',function(req,res){
   });
 });
 
-
+/*
 app.get('/',function(req,res){
     //res.writeHead(200,"")
     res.render('index');
     console.log('rendered!');
     
 });
-
+*/
 
 
 app.post('/submit',(req,res)=>{
@@ -159,6 +159,9 @@ app.get('/universaldb',function(req,res){
     if (err) throw err;
     
     let payload=JSON.stringify(result);
+
+    console.log('payload is');
+    console.log(payload);
 
     res.send(payload);
   });
