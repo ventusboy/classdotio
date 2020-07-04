@@ -10,7 +10,7 @@ const uri = "mongodb+srv://dbUser:" + process.env.DBPASSWORD + "@cluster0-8ixoa.
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 client.connect((err) => { if (err) console.log(err) });
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 3000;
 
 app = express();
 //app.set('view engine', 'ejs');
