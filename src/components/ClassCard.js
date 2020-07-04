@@ -37,12 +37,13 @@ function createclass(name, area, code, completed, prereqs) {
 }
 
 function load() {
-    var xhr = new XMLHttpRequest();
-    xhr.open('GET', '/payload', true);
+
+    //var xhr = new XMLHttpRequest();
+    //xhr.open('GET', '/payload', true);
     let classes = [];
 
     console.log('loading');
-    xhr.onreadystatechange = function () {
+    /*xhr.onreadystatechange = function () {
         if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
             //console.log('response is ' + xhr.responseText);
             classes = JSON.parse(xhr.responseText);
@@ -66,7 +67,38 @@ function load() {
         }
     }
     xhr.setRequestHeader('Accept', 'application/json');
-    xhr.send();
+    xhr.send();*/
+
+    fetch('/payload', {
+        method: 'post',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(this.state.user)
+    })
+        .then(response => response.json())
+        .then((response) => {
+            classes = response.result;
+            console.log(classes);
+
+            classes.forEach((item) => {
+                if (typeof item.pre != 'string')
+                    item.pre = item.pre;
+                else
+                    item.pre = JSON.parse(item.pre);
+
+                if (item.completed) {
+                    completedArray.push(item.area + ' ' + item.code);
+                }
+            });
+
+            classes = classes.sort((a, b) => {
+                return a.completed - b.completed;
+            });
+
+            //self.setState({ list: classes, oglist: classes });
+        });
+
     //console.log(classes);
     return classes;
 }
@@ -192,27 +224,27 @@ class Iform extends React.Component {
 
     }
 
-    componentDidMount(){
-        
+    componentDidMount() {
+
         let reqHeader = new Headers();
         reqHeader.append('Accept', 'application/json');
         let initObject = {
             method: 'GET', headers: reqHeader,
         };
 
-        fetch('/universaldb',initObject)
-        .then((response)=>{
-            return response.json();
-            //dropdowndb=response.json();
-        })
-        .then((data)=>{
-            //console.log(data);
-            this.setState({dropdowndb: data});
-        })
-        .catch((err)=>{
-            console.log("fetch request is broken");
-            console.log(err);
-        });
+        fetch('/universaldb', initObject)
+            .then((response) => {
+                return response.json();
+                //dropdowndb=response.json();
+            })
+            .then((data) => {
+                //console.log(data);
+                this.setState({ dropdowndb: data });
+            })
+            .catch((err) => {
+                console.log("fetch request is broken");
+                console.log(err);
+            });
     }
 
     render() {
@@ -230,7 +262,7 @@ class Iform extends React.Component {
                         onChange={this.handleChange} list="options" /*onFocus={this.onFocus} onBlur={this.onBlur}*/></input>
 
                     <div className="errorMsg">{this.state.valid ? '' : this.state.nameError}</div>
-                    {$('#name').val()!==''? <Dropdown list={this.state.dropdowndb}/>:''}
+                    {$('#name').val() !== '' ? <Dropdown list={this.state.dropdowndb} type={"name"} /> : ''}
                 </div>
                 <div className="form-group">
                     <label htmlFor="classcode">code</label>
@@ -266,12 +298,16 @@ class Iform extends React.Component {
 }
 
 function Dropdown(props) {
-
+    let type = props.type;
 
     let filtereditems = props.list.filter((item) => {
 
         //if(item.name.toLowerCase().includes(props.name.toLowerCase())){
-        return item.name;
+        if (type == 'name')
+            return item.name;
+        else if (type == 'code')
+            return item.area + ' ' + item.code;
+
         //}
 
     });
@@ -346,6 +382,7 @@ class Classcard extends React.Component {
             searchtext: '',
             //list: this.props.list,
             //oglist: this.props.list
+            user: this.props.user,
             list: [],
             oglist: []
 
@@ -359,15 +396,16 @@ class Classcard extends React.Component {
 
     componentDidMount() {
 
-        let self=this;
+        let self = this;
 
 
         var xhr = new XMLHttpRequest();
-        xhr.open('GET', '/payload', true);
+        // xhr.open('POST', '/payload', true);
         let classes = [];
 
         console.log('loading');
-        xhr.onreadystatechange = function () {
+        console.log(this.state.user);
+        /*xhr.onreadystatechange = function () {
             if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
                 //console.log('response is ' + xhr.responseText);
                 classes = JSON.parse(xhr.responseText);
@@ -388,11 +426,42 @@ class Classcard extends React.Component {
                     return a.completed - b.completed;
                 });
 
-                self.setState({list: classes, oglist: classes});
+                self.setState({ list: classes, oglist: classes });
             }
         }
-        xhr.setRequestHeader('Accept', 'application/json');
-        xhr.send();
+        //xhr.setRequestHeader('Accept', 'application/json');
+        //xhr.send({ user: this.state.user.email });
+*/
+
+        fetch('/payload', {
+            method: 'post',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(this.state.user)
+        })
+            .then(response => response.json())
+            .then((response) => {
+                classes = response.result;
+                console.log(classes);
+
+                classes.forEach((item) => {
+                    if (typeof item.pre != 'string')
+                        item.pre = item.pre;
+                    else
+                        item.pre = JSON.parse(item.pre);
+
+                    if (item.completed) {
+                        completedArray.push(item.area + ' ' + item.code);
+                    }
+                });
+
+                classes = classes.sort((a, b) => {
+                    return a.completed - b.completed;
+                });
+
+                self.setState({ list: classes, oglist: classes });
+            });
 
     }
 
@@ -488,6 +557,7 @@ class Classcard extends React.Component {
         let xhr = new XMLHttpRequest();
 
         let newitem = createclass(name, area, classcode, completed, prereqs);
+        newitem.email = this.state.user.email;
 
         if (this.duplicate(newitem)) {
             xhr.open('POST', '/update', true);
@@ -550,32 +620,32 @@ class Classcard extends React.Component {
     render() {
         return (
             <Fragment>
-            <div className="row mainbody col-12">
-                <div className="col-3">
-                    <div className="card ">
-                        <div className="card-header">
-                            <h1>Class Input</h1>
-                        </div>
-                        <div className="card-body">
-                            <Iform newclass={this.newclass} list={this.state.oglist} />
+                <div className="row mainbody col-12">
+                    <div className="col-3">
+                        <div className="card ">
+                            <div className="card-header">
+                                <h1>Class Input</h1>
+                            </div>
+                            <div className="card-body">
+                                <Iform newclass={this.newclass} list={this.state.oglist} />
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div className="col-7">
-                    <div className="card" style={{ height: '90vh' }}>
-                        <div className="d-flex card-header container align-items-center">
-                            <h1 className="col-4 ">Classes</h1>
-                            <Search changeSearch={this.changeSearch} searchtext={this.state.searchtext} />
-                        </div>
-                        <div className="card-body container-fluid" style={{ overflow: "scroll", overflowX: "hidden" }}>
-                            <div className="row">
-                                <Truecard list={this.state.list} searchtext={this.state.searchtext} delete={this.onDelete} />
+                    <div className="col-7">
+                        <div className="card" style={{ height: '100%' }}>
+                            <div className="d-flex card-header container align-items-center">
+                                <h1 className="col-4 ">Classes</h1>
+                                <Search changeSearch={this.changeSearch} searchtext={this.state.searchtext} />
+                            </div>
+                            <div className="card-body container-fluid" style={{ overflow: "scroll", overflowX: "hidden" }}>
+                                <div className="row">
+                                    <Truecard list={this.state.list} searchtext={this.state.searchtext} delete={this.onDelete} />
 
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
             </Fragment>
         );
     }

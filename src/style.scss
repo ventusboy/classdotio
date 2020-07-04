@@ -35,6 +35,15 @@ body{
     //padding-top: 5vh;
     background-color: beige;
 }
+
+header{
+    height: fit-content;
+}
+.navbar{
+    height: 12vh;
+    padding-top: 0;
+    padding-bottom: 0;
+}
 .deletebtn{
     height: 10px;
 }

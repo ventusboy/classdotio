@@ -34,6 +34,18 @@ body {
   background-color: beige;
 }
 
+header {
+  height: -webkit-fit-content;
+  height: -moz-fit-content;
+  height: fit-content;
+}
+
+.navbar {
+  height: 12vh;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
 .deletebtn {
   height: 10px;
 }
