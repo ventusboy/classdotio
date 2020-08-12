@@ -1,0 +1,78 @@
+.classCard {
+  border: solid black 2px;
+  /*width: 25%; */
+  padding: 1em;
+  border-radius: 1em;
+  /* margin: .1em !important;*/
+}
+
+.classCard .deletebtn {
+  height: 30px;
+  opacity: .2;
+  cursor: pointer;
+}
+
+.classCard .deletebtn:hover {
+  opacity: 1;
+}
+
+body {
+  background-color: beige;
+}
+
+.deletebtn {
+  height: 10px;
+}
+
+input {
+  width: auto;
+}
+
+.red {
+  background-color: rgba(255, 0, 0, 0.699);
+}
+
+.green {
+  background-color: rgba(0, 128, 0, 0.575);
+}
+
+.blue {
+  background-color: rgba(0, 17, 255, 0.699);
+}
+
+.yellow {
+  background-color: rgba(255, 251, 0, 0.692);
+}
+
+.incorrect {
+  border: red solid 1px;
+}
+
+.errorMsg {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: left;
+      -ms-flex-pack: left;
+          justify-content: left;
+  width: 100%;
+  text-align: right;
+  color: #ff0000;
+}
+
+.drop-down:hover {
+  background: skyblue;
+}
+
+input::-webkit-calendar-picker-indicator {
+  display: none;
+}
+
+.hide {
+  display: none;
+}
+
+input {
+  border-radius: 5px;
+}
+/*# sourceMappingURL=style.css.map */
