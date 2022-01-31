@@ -1,5 +1,6 @@
 import React, { Fragment } from "react";
-import { useAuth0 } from "../react-auth0-spa";
+// import { useAuth0 } from "../react-auth0-spa";
+import axios from "axios";
 
 import '../style.css';
 import $ from 'jquery';
@@ -18,13 +19,13 @@ var completedArray = [];
 
 
 
-function createclass(name, area, code, completed, prereqs) {
+function createclass(name, area, code, completed, preReqs) {
     var classvar = {
-        name: name,
-        code: code,
-        area: area,
-        completed: completed,
-        pre: prereqs,
+        name,
+        code,
+        area,
+        completed,
+        preReqs,
         color: (!completed) ? 'red' : 'blue',
         rank: code,
     };
@@ -69,11 +70,14 @@ function load() {
     xhr.setRequestHeader('Accept', 'application/json');
     xhr.send();*/
 
-    fetch('/payload', {
+    /*fetch('/payload', {
         method: 'post',
         headers: {
             'Content-Type': 'application/json'
         },
+        body: JSON.stringify(this.state.user)
+    })*/
+    axios.post('/payload', {
         body: JSON.stringify(this.state.user)
     })
         .then(response => response.json())
@@ -82,10 +86,8 @@ function load() {
             console.log(classes);
 
             classes.forEach((item) => {
-                if (typeof item.pre != 'string')
-                    item.pre = item.pre;
-                else
-                    item.pre = JSON.parse(item.pre);
+                if (typeof(item.preReqs) == 'string')
+                    item.preReqs = JSON.parse(item.preReqs);
 
                 if (item.completed) {
                     completedArray.push(item.area + ' ' + item.code);
@@ -109,7 +111,7 @@ function load() {
 const initstate = {
     name: '',
     classcode: '',
-    prereqs: '',
+    preReqs: '',
     nameError: '',
     classcodeError: '',
     prereqError: '',
@@ -160,7 +162,7 @@ class Iform extends React.Component {
         }
         this.setState({ name: '' });
         this.setState({ classcode: '' });
-        this.setState({ prereqs: '' });
+        this.setState({ preReqs: '' });
 
     }
 
@@ -281,9 +283,9 @@ class Iform extends React.Component {
                 </div>
 
                 <div className="form-group">
-                    <label htmlFor="prereqs">prereq(s):</label>
+                    <label htmlFor="preReqs">prereq(s):</label>
                     <br></br>
-                    <input type="text" id="prereqs" className="form-control"></input>
+                    <input type="text" id="preReqs" className="form-control"></input>
                 </div>
 
                 <br></br>
@@ -527,7 +529,7 @@ class Classcard extends React.Component {
         // this.state=initstate;
         ////console.log(this.state);
 
-        let prereqs = [];
+        let preReqs = [];
         let classes = Object.assign([], this.state.oglist);
 
         let name = $('#name').val().trim();
@@ -536,9 +538,9 @@ class Classcard extends React.Component {
         let classcode = preclasscode.substring(3, preclasscode.length);
         let area = preclasscode.substring(0, 3).toUpperCase();
         let completed = $('#completed').prop('checked');
-        prereqs = $('#prereqs').val().toUpperCase().trim().split(',');
+        preReqs = $('#preReqs').val().toUpperCase().trim().split(',');
 
-        prereqs = prereqs.map((str) => {
+        preReqs = preReqs.map((str) => {
             str = str.replace(/\s/g, '');
 
             if (str.length % 7 != 0 || str.length == 0) {
@@ -548,15 +550,15 @@ class Classcard extends React.Component {
             return str.slice(0, 3) + ' ' + str.slice(3, str.length);
         });
 
-        prereqs = prereqs.filter((e) => {
+        preReqs = preReqs.filter((e) => {
             return e
         });
 
-        console.log(prereqs);
+        console.log(preReqs);
 
         let xhr = new XMLHttpRequest();
 
-        let newitem = createclass(name, area, classcode, completed, prereqs);
+        let newitem = createclass(name, area, classcode, completed, preReqs);
         newitem.email = this.state.user.email;
 
         if (this.duplicate(newitem)) {
@@ -573,7 +575,7 @@ class Classcard extends React.Component {
         $('#name').val('');
         $('#classcode').val('');
         $('#completed').checked = false;
-        $('#prereqs').val('');
+        $('#preReqs').val('');
         //update();
 
 
@@ -731,11 +733,11 @@ function PreReqList(props) {
 
 
 
-    const prereqs = preReqListParse.map((item) =>
+    const preReqs = preReqListParse.map((item) =>
 
         <button type="button" key={item.toString()} onClick={navigateTo} className="btn btn-secondary" style={{ marginRight: "3px" }} value={item.replace(' ', '-')} >{item} </button>
     );
-    return prereqs;
+    return preReqs;
 }
 function navigateTo(obj) {
     let button = obj.target;

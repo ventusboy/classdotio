@@ -8,12 +8,12 @@ const functions = require("firebase-functions");
 //   response.send("Hello from Firebase!");
 // });
 
-const result = require('dotenv').config();
+// const result = require('dotenv').config();
 const express = require('express');
 const bodyParser = require('body-parser');
 // const MongoClient = require('mongodb').MongoClient;
-const { auth } = require("express-openid-connect");
-const session = require("express-session");
+// const { auth } = require("express-openid-connect");
+// const session = require("express-session");
 const path = require('path');
 
 const { initializeApp, applicationDefault, cert } = require('firebase-admin/app');
@@ -61,13 +61,13 @@ app.use(
 //app.use("/api", require("./api"))
 
 
-app.post('/payload', function (req, res) {
+app.post('/payload', async function (req, res) {
     var answer;
 
     console.log(req.body)
     let { email } = req.body
 
-    let userClasses = db.collection("users").doc(email).get();
+    let userClasses = await db.collection("users").doc(email).get();
     userClasses.classes.toArray((err, result) => {
         if (err) throw err;
         // console.log(result);
@@ -75,16 +75,17 @@ app.post('/payload', function (req, res) {
     });
 });
 
-app.post('/submit', (req, res) => {
+app.post('/submit', async (req, res) => {
     // console.log('it worked');
     // console.log(req.body);
     let payload = req.body
-    let classCode = classInfo.field + classInfo.number
+    let classCode = classInfo.area + classInfo.code
 
     let classInfo = {
+        name: payload.name,
         preReqs: payload.preReqs || [],
-        number: payload.number,
-        code: payload.code,
+        code: payload.number,
+        area: payload.code,
         description: payload.description,
         color: payload.color,
         rank: payload.rank,
@@ -127,7 +128,7 @@ app.post('/submit', (req, res) => {
 
 });
 
-app.post('/delete', (req, res) => {
+app.post('/delete', async (req, res) => {
     // db.collection("users").doc(email).collection("classes").doc(classCode).delete()
     let payload = req.body
     await findUserClass(payload).delete()
@@ -143,16 +144,17 @@ app.post('/delete', (req, res) => {
     })*/
 });
 
-app.post('/update', (req, res) => {
+app.post('/update', async (req, res) => {
 
     console.log('updating');
     let payload = req.body;
-    let classCode = classInfo.field + classInfo.number
+    let classCode = classInfo.area + classInfo.code
 
     let classInfo = {
+        name: payload.name,
         preReqs: payload.preReqs || [],
-        number: payload.number,
-        code: payload.code,
+        code: payload.number,
+        area: payload.code,
         description: payload.description,
         color: payload.color,
         rank: payload.rank,
@@ -202,10 +204,11 @@ app.post('/update', (req, res) => {
 */
 }); 
 
-app.get('/universaldb', function (req, res) {
+app.get('/universaldb', async (req, res) => {
 
-    let collection = await db.collection("allClasses");
-    collection.find({}).toArray((err, result) => {
+    let collection = await db.collection("allClasses").get();
+    res.json(collection)
+    /*collection.find({}).toArray((err, result) => {
         if (err) throw err;
 
         let payload = JSON.stringify(result);
@@ -214,12 +217,12 @@ app.get('/universaldb', function (req, res) {
         //console.log();
 
         res.send(payload);
-    });
+    });*/
 });
-function findUserClass({ email, code, number }) {
+async function findUserClass({ email, area, code }) {
     // this function will get the ref of a classItem that exists or it will create one
     try {
-        return db.collection("users").doc(email).collection("classes").doc(code + number)
+        return await db.collection("users").doc(email).collection("classes").doc(area + code)
     } catch (error) {
         console.log(error)
         return null

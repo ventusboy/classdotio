@@ -12,7 +12,7 @@ const NavBar = () => {
 
             <div className='container-fluid row d-flex justify-content-end' id="navbarNavAltMarkup">
 
-                <h1 className="navbar-brand"><Link to="/">Classdotio</Link> by <a href="https://www.mikalyoung.com/" target="_blank"> Mikal Young</a></h1>
+                <h1 className="navbar-brand"><Link to="/">Classdotio</Link> by <a href="https://www.mikalyoung.com/" target="_blank" rel="noopener noreferrer"> Mikal Young</a></h1>
 
 
                 <ul className="nav navbar-nav d-flex align-items-center flex-row-reverse col-3 ml-auto justify-content-start ">

@@ -7,12 +7,14 @@
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.5.0",
     "@testing-library/user-event": "^7.2.1",
+    "axios": "^0.25.0",
     "core-js": "^3.6.5",
     "create-react-app": "^3.4.1",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "express-openid-connect": "^0.8.1",
     "express-session": "^1.17.1",
+    "firebase-admin": "^10.0.2",
     "jquery": "^3.5.1",
     "mongodb": "^3.5.9",
     "path": "^0.12.7",
@@ -23,10 +25,11 @@
     "serve": "^11.3.2"
   },
   "engines": {
-    "node": "12.x"
+    "node": "16.x"
   },
   "scripts": {
     "start": "node server.js #Production only!",
+    "dev": "react-scripts start",
     "postinstall": "npm run build",
     "build": "react-scripts build",
     "test": "react-scripts test",
