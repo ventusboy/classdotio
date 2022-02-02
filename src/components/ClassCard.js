@@ -1,9 +1,10 @@
-import React, { Fragment } from "react";
 // import { useAuth0 } from "../react-auth0-spa";
 import axios from "axios";
-
-import '../style.css';
 import $ from 'jquery';
+import React, { Fragment } from "react";
+import '../style.css';
+import Singlecard from "./Singlecard"
+
 
 
 
@@ -19,7 +20,7 @@ var completedArray = [];
 
 
 
-function createclass(name, area, code, completed, preReqs) {
+function createClass(name, area, code, completed, preReqs) {
     var classvar = {
         name,
         code,
@@ -558,7 +559,7 @@ class Classcard extends React.Component {
 
         let xhr = new XMLHttpRequest();
 
-        let newitem = createclass(name, area, classcode, completed, preReqs);
+        let newitem = createClass(name, area, classcode, completed, preReqs);
         newitem.email = this.state.user.email;
 
         if (this.duplicate(newitem)) {
@@ -673,7 +674,7 @@ class Truecard extends React.Component {
 
         let filteredItems = (this.props.list ? this.props.list : []).map((item) => {
             console.log('loading ' + item.name);
-            return <Singlecard key={item.area.toString() + item.code.toString()} delete={this.removeClass} item2={item} />
+            return <Singlecard key={item.area.toString() + item.code.toString()} delete={this.removeClass} data={item} />
 
         });
 
@@ -681,102 +682,5 @@ class Truecard extends React.Component {
         return filteredItems;
     }
 }
-
-class Singlecard extends React.Component {
-
-    constructor(props) {
-        super(props);
-        console.log(this.props.item2);
-        this.state = this.props.item2;
-        this.onDelete = this.onDelete.bind(this);
-
-
-    }
-
-    onDelete() {
-        console.log('item');
-        //this.setState()
-        this.props.delete(this.props.item2);
-    }
-
-    render() {
-        console.log(this.props.item2.name);
-        var obj = this.props.item2;
-
-        return (
-            <div id={obj.area + '-' + obj.code} className={preReqsMet(obj) + ' classCard col-10 container offset-1'}>
-                <div className="row">
-                    <h3 className="col-xl-4 col-sm-4">{obj.area + ' ' + obj.code}</h3>
-                    <h3 className="col-xl-7 col-sm-6">{obj.name}</h3>
-                    <img className="col-xl-1 col-sm-2 deletebtn d-flex justify-content-end" src="./assets/delete.svg" onClick={() => { this.onDelete() }} />
-                </div>
-                <div className="row">
-                    <h4 className="col-8">pre-reqs: <PreReqList pre={obj.pre} /> </h4>
-                    <h4 className="col-4">completed: {obj.completed ? 'yes' : 'no'}</h4>
-                </div>
-                <div className="row">
-                    <p className="col-12">description: the course you need to learn all about {obj.name}</p>
-                </div>
-            </div>
-        );
-    }
-}
-
-function PreReqList(props) {
-    //let preReqListParse=JSON.parse(props.pre)
-
-
-    let preReqListParse = props.pre;
-    //console.log(preReqListParse);
-
-
-
-
-
-    const preReqs = preReqListParse.map((item) =>
-
-        <button type="button" key={item.toString()} onClick={navigateTo} className="btn btn-secondary" style={{ marginRight: "3px" }} value={item.replace(' ', '-')} >{item} </button>
-    );
-    return preReqs;
-}
-function navigateTo(obj) {
-    let button = obj.target;
-
-    let elmnt = document.getElementById(button.value);
-    //console.log("#"+button.value);
-    elmnt.scrollIntoView({ behavior: "smooth", block: "start", inline: "nearest" });
-}
-
-
-function preReqsMet(info) {
-    let pre = info.pre;
-    //console.log(completedArray);
-    //console.log(pre);
-    if (info.completed) {
-        info.color = 'blue';
-        info.rank = '1';
-        //console.log('blue');
-        return 'blue';
-    }
-    else {
-
-        for (var i = 0; i < pre.length; i++) {
-            if (!completedArray.includes(pre[i])) {
-                info.color = 'red';
-                info.rank = '3';
-                //console.log('red');
-                return 'red';
-            }
-        }
-        //info.rank='2';
-        info.color = 'yellow';
-        info.rank = '2'
-        //console.log('yellow');
-        return 'yellow';
-    }
-
-
-}
-
 
 export default Classcard;
