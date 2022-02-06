@@ -68,15 +68,15 @@ function preReqsMet(info) {
         return 'blue';
     }
     else {
-
-        for (var i = 0; i < pre.length; i++) {
+        // put back later
+        /*for (var i = 0; i < pre.length; i++) {
             if (!completedArray.includes(pre[i])) {
                 info.color = 'red';
                 info.rank = '3';
                 //console.log('red');
                 return 'red';
             }
-        }
+        }*/
         //info.rank='2';
         info.color = 'yellow';
         info.rank = '2'

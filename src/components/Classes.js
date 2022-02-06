@@ -1,7 +1,15 @@
-import React from "react";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
 import { render } from "react-dom";
 
-function Classes() {
+function Classes(props) {
+    const [userClasses, setUserClasses] = useState([])
+
+    useEffect(async () => {
+        axios.post('/getUserInfo').then((userInfo) => {
+            console.log(userInfo)
+        })
+    })
     return render(
         <div>
             <div className="col-7">
@@ -21,3 +29,5 @@ function Classes() {
         </div>
     )
 }
+
+export default Classes

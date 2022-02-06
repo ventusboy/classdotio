@@ -61,18 +61,21 @@ app.use(
 //app.use("/api", require("./api"))
 
 
-app.post('/payload', async function (req, res) {
-    var answer;
-
+app.post('/getUserInfo', async function (req, res) {
     console.log(req.body)
     let { email } = req.body
-
-    let userClasses = await db.collection("users").doc(email).get();
-    userClasses.classes.toArray((err, result) => {
+  try {
+    let userInfo = await db.collection("users").doc(email).get();
+    res.json(userInfo)
+  } catch (error) {
+    res.json({error})
+  }
+    
+    /*userInfo.classes.toArray((err, result) => {
         if (err) throw err;
         // console.log(result);
         res.send({ result });
-    });
+    });*/
 });
 
 app.post('/submit', async (req, res) => {
