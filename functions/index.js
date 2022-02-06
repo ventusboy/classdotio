@@ -18,6 +18,7 @@ const path = require('path');
 
 const { initializeApp, applicationDefault, cert } = require('firebase-admin/app');
 const { getFirestore, Timestamp, FieldValue } = require('firebase-admin/firestore');
+// const { app } = require("firebase-admin");
 
 initializeApp();
 const db = getFirestore();
@@ -60,6 +61,9 @@ app.use(
 */
 //app.use("/api", require("./api"))
 
+app.get('*', (req, res) => {
+  res.send('Page does not exist')
+})
 
 app.post('/getUserInfo', async function (req, res) {
     console.log(req.body)

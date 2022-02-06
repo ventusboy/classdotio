@@ -11,6 +11,7 @@ import Profile from "./components/Profile";
 import history from "./utils/history";
 import ClassCard from "./components/ClassCard.js";
 import Home from "./components/Home.js"
+import DashBoard from './pages/DashBoard';
 //import classes from '*.module.css';
 
 
@@ -37,12 +38,12 @@ function App() {
 					{/*<PrivateRoute path="/" component={ClassCard} />*/}
 
 					<Route exact path="/">
-						{isAuthenticated ? <ClassCard user={user} /> : <Home />}
+						{isAuthenticated ? <DashBoard user={user} /> : <Home />}
 
 					</Route>
 
 					<PrivateRoute exact path="/dashboard" >
-						<ClassCard user={user} />
+						<DashBoard user={user} />
 					</PrivateRoute>
 					<Route path="/profile" >
 						<Profile />

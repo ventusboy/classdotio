@@ -51,5 +51,6 @@
     ]
   },
   "main": "index.js",
-  "proxy": "http://0.0.0.0:8080"
+  "proxy": "http://localhost:5001/classdotio-7a498/us-central1/app",
+  "proxyRemove": "http://0.0.0.0:8080"
 }

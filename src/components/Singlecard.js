@@ -14,7 +14,7 @@ function Singlecard (props) {
         props.delete(this.props.data);
     }
 
-    console.log(props.data.name);
+    console.log(props.data?.name);
     let { data } = props;
 
     return (
