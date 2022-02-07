@@ -7,7 +7,7 @@ import Classes from "../components/Classes"
 function DashBoard(props) {
     return (
         <div>
-            <Classform />
+            <Classform user={props.user}/>
             <Classes user={props.user} />
         </div>
     )

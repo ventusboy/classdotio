@@ -1,3 +1,4 @@
+import axios from "axios";
 import React from "react";
 
 const initstate = {
@@ -123,6 +124,22 @@ class Classform extends React.Component {
         let initObject = {
             method: 'GET', headers: reqHeader,
         };
+        // console.log(this.props)
+
+        axios.post('/submit', {
+            name: 'Bio 1',
+            preReqs: [],
+            code: '1001',
+            area: 'BIO',
+            description: 'intro to Bio 1',
+            color: 'yellow',
+            rank: 1,
+            completed: false,
+            email: this.props.user.email
+        })
+        .then((data) => {
+            console.log(data)
+        })
 
         fetch('/universaldb', initObject)
             .then((response) => {

@@ -84,15 +84,15 @@ app.post('/getUserInfo', async function (req, res) {
 
 app.post('/submit', async (req, res) => {
     // console.log('it worked');
-    // console.log(req.body);
+    console.log(req.body);
     let payload = req.body
-    let classCode = classInfo.area + classInfo.code
+    let classCode = payload.area + payload.code
 
     let classInfo = {
         name: payload.name,
         preReqs: payload.preReqs || [],
-        code: payload.number,
-        area: payload.code,
+        code: payload.code,
+        area: payload.area,
         description: payload.description,
         color: payload.color,
         rank: payload.rank,
@@ -106,6 +106,7 @@ app.post('/submit', async (req, res) => {
 
     // userClasses.doc(classCode).set(json)
     await findUserClass(payload).set(classInfo)
+    console.log('done')
     /*, function (err, res) {
       if (err) throw err;
       console.log("1 document inserted");
@@ -135,10 +136,10 @@ app.post('/submit', async (req, res) => {
 
 });
 
-app.post('/delete', async (req, res) => {
+app.post('/delete', (req, res) => {
     // db.collection("users").doc(email).collection("classes").doc(classCode).delete()
     let payload = req.body
-    await findUserClass(payload).delete()
+    findUserClass(payload).delete()
     /*let json = req.body;
   
     let query = { area: json.area, code: json.code, email: json.email };
@@ -226,10 +227,12 @@ app.get('/universaldb', async (req, res) => {
         res.send(payload);
     });*/
 });
-async function findUserClass({ email, area, code }) {
+function findUserClass({ email, area, code }) {
     // this function will get the ref of a classItem that exists or it will create one
     try {
-        return await db.collection("users").doc(email).collection("classes").doc(area + code)
+        let data = db.collection("users").doc(email).collection("classes").doc(area + code)
+        console.log(data)
+        return data
     } catch (error) {
         console.log(error)
         return null
