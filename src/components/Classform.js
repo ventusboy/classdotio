@@ -161,45 +161,44 @@ class Classform extends React.Component {
 
 
         return (
-            <form id="classform" className=" col-11 col-sm-4" onSubmit={this.handleSubmit} autoComplete="new-password" >
-                <div className="form-group" style={{ position: "relative" }}>
-                    <label htmlFor="name">name</label>
-                    <br></br>
+            <div className="col-11 col-sm-3">
+                <form id="classform" className="card" onSubmit={this.handleSubmit} autoComplete="new-password" >
+                    <legend className="card-header">Add a new class here</legend>
+                    <div className="card-body">
+                        <div className="mb-2">
+                            <label htmlFor="name">Name</label>
+                            <input type="text" id="name" name={Date.now()} autoComplete="new-password"
+                                className={this.state.nameError ? 'form-control incorrect' : 'form-control'} value={this.state.name}
+                                onChange={this.handleChange} list="options" /*onFocus={this.onFocus} onBlur={this.onBlur}*/></input>
 
-                    <input type="text" id="name" name={Date.now()} autoComplete="new-password"
-                        className={this.state.nameError ? 'form-control incorrect' : 'form-control'} value={this.state.name}
-                        onChange={this.handleChange} list="options" /*onFocus={this.onFocus} onBlur={this.onBlur}*/></input>
+                            <div className="errorMsg">{this.state.valid ? '' : this.state.nameError}</div>
+                            {this.state.name !== '' ? <Dropdown list={this.state.dropdowndb} type={"name"} /> : ''}
+                        </div>
+                        <div className="mb-2">
+                            <label htmlFor="classcode">Class Code</label>
+                            <input type="text" id="classcode" className={this.state.classcodeError ? 'incorrect' : 'form-control'}
+                                value={this.state.classcode} onChange={this.codeChange}></input>
 
-                    <div className="errorMsg">{this.state.valid ? '' : this.state.nameError}</div>
-                    {this.state.name !== '' ? <Dropdown list={this.state.dropdowndb} type={"name"} /> : ''}
-                </div>
-                <div className="form-group">
-                    <label htmlFor="classcode">code</label>
-                    <br></br>
-
-                    <input type="text" id="classcode" className={this.state.classcodeError ? 'incorrect' : 'form-control'}
-                        value={this.state.classcode} onChange={this.codeChange}></input>
-
-                    <div className="errorMsg">{this.state.valid ? '' : this.state.classcodeError}</div>
-                </div>
-
-
-                <div className="form-group">
-                    <label htmlFor="classcode">completed:</label>
-                    <input type="checkbox" name="complete" id="completed" className="" style={{ marginLeft: '20px' }}></input>
-                </div>
-
-                <div className="form-group">
-                    <label htmlFor="preReqs">prereq(s):</label>
-                    <br></br>
-                    <input type="text" id="preReqs" className="form-control"></input>
-                </div>
-
-                <br></br>
-                <button type="submit" className="btn btn-primary" form="classform">submit</button>
+                            <div className="errorMsg">{this.state.valid ? '' : this.state.classcodeError}</div>
+                        </div>
 
 
-            </form>
+                        <div className="mb-2">
+                            <label htmlFor="classcode">Completed:</label>
+                            <input type="checkbox" name="complete" id="completed" className="" style={{ marginLeft: '20px' }}></input>
+                        </div>
+
+                        <div className="mb-2">
+                            <label htmlFor="preReqs">Pre-req(s):</label>
+                            <input type="text" id="preReqs" className="form-control"></input>
+                        </div>
+
+                        <br></br>
+                        <button type="submit" className="btn btn-primary" form="classform">submit</button>
+                    </div>
+
+                </form>
+            </div>
 
 
         );

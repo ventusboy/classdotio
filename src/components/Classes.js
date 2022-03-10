@@ -17,14 +17,16 @@ function Classes(props) {
         })
     })
     return(
-        <div className="col-sm-8">
-            <div className="col-7">
-                <div className="card" style={{ height: '100%' }}>
-                    <div className="d-flex card-header container align-items-center">
-                        <h1 className="col-4 ">Classes</h1>
-                        <Search />
+        <div className="col-11 col-sm-8">
+            <div>
+                <div className="card">
+                    <div className="d-flex card-header align-items-center">
+                        <h1 className="col-4">Classes</h1>
+                        <div className="col-8">
+                            <Search />
+                        </div>
                     </div>
-                    <div className="card-body container-fluid" style={{ overflow: "scroll", overflowX: "hidden" }}>
+                    <div className="card-body container-fluid" style={{"min-height": "300px"}}>
                         <div className="row">
                             {/*<Singlecard data={props.user} list={userClasses} searchtext={searchText} />*/}
                         </div>
