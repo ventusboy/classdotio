@@ -4,7 +4,7 @@ import React, { Fragment } from "react";
 import { useAuth0 } from "../react-auth0-spa";
 
 const Profile = () => {
-  const { loading, user } = useAuth0();
+  const { loading, user, logout, isAuthenticated } = useAuth0();
   console.log('yikes');
 
   if (loading) {
@@ -22,6 +22,7 @@ const Profile = () => {
       <h2>{user.name}</h2>
       <p>{user.email}</p>
       <code>{JSON.stringify(user, null, 2)}</code>
+      {isAuthenticated && <button className='btn btn-outline-primary justify-self-end' onClick={() => logout({ returnTo: window.location.origin })}>Log out</button>}
     </Fragment>
   );
 };

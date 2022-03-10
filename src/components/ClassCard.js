@@ -2,7 +2,7 @@
 import axios from "axios";
 import $ from 'jquery';
 import React, { Fragment } from "react";
-import '../style.css';
+// import '../style.css';
 import Singlecard from "./Singlecard"
 import Classform from "./Classform";
 import Search from "./Search";
@@ -109,25 +109,7 @@ function load() {
 }
 
 
-
-
-const initstate = {
-    name: '',
-    classcode: '',
-    preReqs: '',
-    nameError: '',
-    classcodeError: '',
-    prereqError: '',
-    value: '',
-    //valid: false
-    valid: true,
-    dropdowndb: []
-}
-
 //$('#classform #name').addEventListener("input", )
-
-
-
 
 
 
@@ -157,8 +139,6 @@ class Classcard extends React.Component {
         let self = this;
 
 
-        var xhr = new XMLHttpRequest();
-        // xhr.open('POST', '/payload', true);
         let classes = [];
 
         console.log('loading');
@@ -204,9 +184,7 @@ class Classcard extends React.Component {
                 console.log(classes);
 
                 classes.forEach((item) => {
-                    if (typeof item.pre != 'string')
-                        item.pre = item.pre;
-                    else
+                    if (typeof item.pre === 'string')
                         item.pre = JSON.parse(item.pre);
 
                     if (item.completed) {
@@ -229,7 +207,7 @@ class Classcard extends React.Component {
         console.log(obj);
         //console.log(classes);
         const templist = this.state.oglist.filter((item) => {
-            if (obj._id != item._id) {
+            if (obj._id !== item._id) {
                 return item;
             }
             else {
@@ -248,6 +226,7 @@ class Classcard extends React.Component {
 
                 xhr.send(JSON.stringify(item));
             }
+            return
         });
 
         this.setState({ oglist: templist });
@@ -277,7 +256,7 @@ class Classcard extends React.Component {
         preReqs = preReqs.map((str) => {
             str = str.replace(/\s/g, '');
 
-            if (str.length % 7 != 0 || str.length == 0) {
+            if (str.length % 7 !== 0 || str.length === 0) {
                 return null;
             }
             //console.log('str is'+str);
@@ -334,7 +313,7 @@ class Classcard extends React.Component {
         var bool = false;
         // item._id=0;
         let templist = this.state.oglist.map((olditem) => {
-            if (item.area == olditem.area && item.code == olditem.code) {
+            if (item.area === olditem.area && item.code === olditem.code) {
                 //item._id=olditem._id;
                 bool = true;
                 return item;

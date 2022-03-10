@@ -17,7 +17,7 @@ function Classes(props) {
         })
     })
     return(
-        <div>
+        <div className="col-sm-8">
             <div className="col-7">
                 <div className="card" style={{ height: '100%' }}>
                     <div className="d-flex card-header container align-items-center">

@@ -161,7 +161,7 @@ class Classform extends React.Component {
 
 
         return (
-            <form id="classform" className="" onSubmit={this.handleSubmit} autoComplete="new-password" >
+            <form id="classform" className=" col-11 col-sm-4" onSubmit={this.handleSubmit} autoComplete="new-password" >
                 <div className="form-group" style={{ position: "relative" }}>
                     <label htmlFor="name">name</label>
                     <br></br>

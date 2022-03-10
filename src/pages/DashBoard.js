@@ -6,7 +6,7 @@ import Classes from "../components/Classes"
 
 function DashBoard(props) {
     return (
-        <div>
+        <div className="row justify-content-center" >
             <Classform user={props.user}/>
             <Classes user={props.user} />
         </div>

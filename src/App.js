@@ -1,7 +1,7 @@
 import React from 'react';
 //import ReactDOM from 'react-dom';
 //import logo from './logo.svg';
-import './style.css';
+import './style.scss';
 //import $ from 'jquery';
 import NavBar from "./components/NavBar";
 import { useAuth0 } from "./react-auth0-spa";
@@ -27,7 +27,7 @@ function App() {
 	}
 
 	return (
-		<div className="App container-fluid">
+		<div className="App">
 			{/* Don't forget to include the history module */}
 			<Router history={history}>
 				<header>
@@ -51,6 +51,7 @@ function App() {
 
 				</Switch>
 			</Router>
+			<h1>Made by <a href="https://www.mikalyoung.com/" target="_blank" rel="noopener noreferrer"> Mikal Young</a></h1>
 		</div >
 	);
 }
