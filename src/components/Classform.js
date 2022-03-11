@@ -1,5 +1,5 @@
 import axios from "axios";
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 const initstate = {
     name: '',
@@ -14,10 +14,12 @@ const initstate = {
     dropdowndb: []
 }
 
-class Classform extends React.Component {
-    constructor(props) {
+function Classform (){
+    const [formData, setFormData] = useState(initstate)
+
+    /*constructor(props) {
         super(props);
-        this.state = initstate;
+        formData = initstate;
         this.handleChange = this.handleChange.bind(this);
         this.codeChange = this.codeChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -26,9 +28,14 @@ class Classform extends React.Component {
         this.onBlur = this.onBlur.bind(this);
         this.changeState = this.changeState.bind(this);
 
-    }
+    }*/
+    useEffect(() => {
+        if (window.innerWidth > 576) {
+            document.getElementById('formCollapse').classList.remove('collapse')
+        }
+    })
 
-    handleChange(event) {
+    function handleChange(event) {
         this.setState({
             name: event.target.value
         });
@@ -36,17 +43,14 @@ class Classform extends React.Component {
 
     }
 
-    changeState(obj) {
 
-    }
-
-    codeChange(event) {
+    function codeChange(event) {
         this.setState({
             classcode: event.target.value
         });
     }
 
-    handleSubmit(event) {
+    function handleSubmit(event) {
         event.preventDefault();
         if (this.validate()) {
             this.props.newclass();
@@ -57,13 +61,13 @@ class Classform extends React.Component {
 
     }
 
-    validate() {
+    function validate() {
         this.setState({ nameError: '' });
         this.setState({ classcodeError: '' });
         let fast = 1;
 
         //console.log('no way 2');
-        if (!this.state.name) {
+        if (!formData.name) {
             this.setState({ nameError: "name cannot be empty" });
             ////console.log('no way!');
             this.setState({ valid: false });
@@ -71,7 +75,7 @@ class Classform extends React.Component {
 
             // return false;
         }
-        if (!this.state.classcode) {
+        if (!formData.classcode) {
             this.setState({ classcodeError: "class code cannot be empty" });
             this.setState({ valid: false });
             fast = 0;
@@ -79,7 +83,7 @@ class Classform extends React.Component {
             //return false;
         }
 
-        ////console.log('the final state is ' + this.state.valid);
+        ////console.log('the final state is ' + formData.valid);
 
         if (fast === 1) {
             //this.setState({ valid: true });   
@@ -92,7 +96,7 @@ class Classform extends React.Component {
 
     }
 
-    onFocus() {
+    function onFocus() {
         //
         //document.querySelector(document).ready(()=>{
         document.querySelector('.dropdown-container').removeClass("hide");
@@ -109,7 +113,7 @@ class Classform extends React.Component {
         // });
     }
 
-    onBlur() {
+    function onBlur() {
         document.querySelector(document).ready(() => {
             document.querySelector('.dropdown-container').addClass("hide");
             document.querySelector('#name').unbind("keyup");
@@ -117,7 +121,7 @@ class Classform extends React.Component {
 
     }
 
-    componentDidMount() {
+    /*componentDidMount() {
 
         let reqHeader = new Headers();
         reqHeader.append('Accept', 'application/json');
@@ -154,55 +158,55 @@ class Classform extends React.Component {
                 console.log("fetch request is broken");
                 console.log(err);
             });
-    }
+    }*/
 
-    render() {
+    return (
+        <div className="col-11 col-sm-3">
+            <form id="classform" className="card" onSubmit={handleSubmit} autoComplete="new-password" >
+                <legend className="card-header justify-content-start d-flex p-6">
+                    <span className="d-none d-sm-block">Add a new class here</span>
+                    <button class="btn btn-primary d-sm-none" type="button" data-bs-toggle="collapse" data-bs-target="#formCollapse" aria-expanded="false" aria-controls="formCollapse">
+                        New Class
+                    </button>
+                </legend>
+                <div id="formCollapse" className="card-body collapse">
+                    <div className="mb-2">
+                        <label htmlFor="name">Name</label>
+                        <input type="text" id="name" name={Date.now()} autoComplete="new-password"
+                            className={formData.nameError ? 'form-control incorrect' : 'form-control'} value={formData.name}
+                            onChange={handleChange} list="options"></input>
 
+                        <div className="errorMsg">{formData.valid ? '' : formData.nameError}</div>
+                        {formData.name !== '' ? <Dropdown list={formData.dropdowndb} type={"name"} /> : ''}
+                    </div>
+                    <div className="mb-2">
+                        <label htmlFor="classcode">Class Code</label>
+                        <input type="text" id="classcode" className={formData.classcodeError ? 'incorrect' : 'form-control'}
+                            value={formData.classcode} onChange={codeChange}></input>
 
-
-        return (
-            <div className="col-11 col-sm-3">
-                <form id="classform" className="card" onSubmit={this.handleSubmit} autoComplete="new-password" >
-                    <legend className="card-header">Add a new class here</legend>
-                    <div className="card-body">
-                        <div className="mb-2">
-                            <label htmlFor="name">Name</label>
-                            <input type="text" id="name" name={Date.now()} autoComplete="new-password"
-                                className={this.state.nameError ? 'form-control incorrect' : 'form-control'} value={this.state.name}
-                                onChange={this.handleChange} list="options" /*onFocus={this.onFocus} onBlur={this.onBlur}*/></input>
-
-                            <div className="errorMsg">{this.state.valid ? '' : this.state.nameError}</div>
-                            {this.state.name !== '' ? <Dropdown list={this.state.dropdowndb} type={"name"} /> : ''}
-                        </div>
-                        <div className="mb-2">
-                            <label htmlFor="classcode">Class Code</label>
-                            <input type="text" id="classcode" className={this.state.classcodeError ? 'incorrect' : 'form-control'}
-                                value={this.state.classcode} onChange={this.codeChange}></input>
-
-                            <div className="errorMsg">{this.state.valid ? '' : this.state.classcodeError}</div>
-                        </div>
-
-
-                        <div className="mb-2">
-                            <label htmlFor="classcode">Completed:</label>
-                            <input type="checkbox" name="complete" id="completed" className="" style={{ marginLeft: '20px' }}></input>
-                        </div>
-
-                        <div className="mb-2">
-                            <label htmlFor="preReqs">Pre-req(s):</label>
-                            <input type="text" id="preReqs" className="form-control"></input>
-                        </div>
-
-                        <br></br>
-                        <button type="submit" className="btn btn-primary" form="classform">submit</button>
+                        <div className="errorMsg">{formData.valid ? '' : formData.classcodeError}</div>
                     </div>
 
-                </form>
-            </div>
+
+                    <div className="mb-2">
+                        <label htmlFor="classcode">Completed:</label>
+                        <input type="checkbox" name="complete" id="completed" className="" style={{ marginLeft: '20px' }}></input>
+                    </div>
+
+                    <div className="mb-2">
+                        <label htmlFor="preReqs">Pre-req(s):</label>
+                        <input type="text" id="preReqs" className="form-control"></input>
+                    </div>
+
+                    <br></br>
+                    <button type="submit" className="btn btn-primary" form="classform">submit</button>
+                </div>
+
+            </form>
+        </div>
 
 
-        );
-    }
+    );
 }
 
 function Dropdown(props) {

@@ -28,30 +28,34 @@ function App() {
 
 	return (
 		<div className="App">
-			{/* Don't forget to include the history module */}
-			<Router history={history}>
-				<header>
-					<NavBar />
-				</header>
-				<Switch>
+			<div>
+				{/* Don't forget to include the history module */}
+				<Router history={history}>
+					<header className='sticky-top'>
+						<NavBar />
+					</header>
+					<Switch>
 
-					{/*<PrivateRoute path="/" component={ClassCard} />*/}
+						{/*<PrivateRoute path="/" component={ClassCard} />*/}
 
-					<Route exact path="/">
-						{isAuthenticated ? <DashBoard user={user} /> : <Home />}
+						<Route exact path="/">
+							{isAuthenticated ? <DashBoard user={user} /> : <Home />}
 
-					</Route>
+						</Route>
 
-					<PrivateRoute exact path="/dashboard" >
-						<DashBoard user={user} />
-					</PrivateRoute>
-					<Route path="/profile" >
-						<Profile />
-					</Route>
+						<PrivateRoute exact path="/dashboard" >
+							<DashBoard user={user} />
+						</PrivateRoute>
+						<Route path="/profile" >
+							<Profile />
+						</Route>
 
-				</Switch>
-			</Router>
-			<h1>Made by <a href="https://www.mikalyoung.com/" target="_blank" rel="noopener noreferrer"> Mikal Young</a></h1>
+					</Switch>
+				</Router>
+			</div>
+			<footer>
+				<h4 className='bottom-brand'>Made by <a href="https://www.mikalyoung.com/" target="_blank" rel="noopener noreferrer">Mikal Young</a></h4>
+			</footer>
 		</div >
 	);
 }
