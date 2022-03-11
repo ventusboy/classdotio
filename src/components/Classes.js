@@ -26,7 +26,7 @@ function Classes(props) {
                             <Search />
                         </div>
                     </div>
-                    <div className="card-body container-fluid" style={{"min-height": "300px"}}>
+                    <div className="card-body container-fluid" style={{"minHeight": "300px"}}>
                         <div className="row">
                             {/*<Singlecard data={props.user} list={userClasses} searchtext={searchText} />*/}
                         </div>

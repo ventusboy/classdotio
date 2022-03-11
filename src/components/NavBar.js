@@ -12,9 +12,9 @@ const NavBar = () => {
 
             <div className='container-fluid' id="navbarNavAltMarkup">
 
-                <a className="navbar-brand"><NavLink className={"nav-link"} to="/">Classdotio</NavLink> </a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#togglerTarget" aria-controls="togglerTarget" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
+                <div className="navbar-brand"><NavLink className={"nav-link"} to="/">Classdotio</NavLink> </div>
+                <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#togglerTarget" aria-controls="togglerTarget" aria-expanded="false" aria-label="Toggle navigation">
+                    <span className="navbar-toggler-icon"></span>
                 </button>
                 <div className="collapse navbar-collapse justify-content-end"  id="togglerTarget">
                     <ul className="navbar-nav">

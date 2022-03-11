@@ -1,5 +1,6 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
+import { useAuth0 } from "../react-auth0-spa";
 
 const initstate = {
     name: '',
@@ -11,11 +12,22 @@ const initstate = {
     value: '',
     //valid: false
     valid: true,
-    dropdowndb: []
+    dropdowndb: [1, 2, 3]
 }
 
 function Classform (){
-    const [formData, setFormData] = useState(initstate)
+    const [name, setName] = useState('')
+    const [classCode, setClassCode] = useState('')
+    const [preReqs, setPreReqs] = useState('')
+    const [completed, setCompleted] = useState('')
+    const [valid, setValid] = useState(true)
+    const [dropdowndb, setDropdowndb] = useState([])
+    const [classCodeError, setClassCodeError] = useState('')
+    const [nameError, setNameError] = useState('')
+    
+    const { user } = useAuth0();
+
+     
 
     /*constructor(props) {
         super(props);
@@ -35,49 +47,56 @@ function Classform (){
         }
     })
 
-    function handleChange(event) {
-        this.setState({
-            name: event.target.value
-        });
-
-
+    function handleNameChange(event) {
+        setName(event.target.value);
+        if(!valid && event.target.value.length > 0) {
+            setNameError('')
+        }
     }
 
 
     function codeChange(event) {
-        this.setState({
-            classcode: event.target.value
-        });
+        setClassCode(event.target.value);
+        if(!valid && event.target.value.length > 0) {
+            setClassCodeError('')
+        }
     }
 
     function handleSubmit(event) {
         event.preventDefault();
-        if (this.validate()) {
-            this.props.newclass();
+        if (validate()) {
+            // this.props.newclass();
+            submitNewClass({
+                name,
+                classCode,
+                preReqs,
+                completed,
+                email: user.email
+            })
         }
-        this.setState({ name: '' });
-        this.setState({ classcode: '' });
-        this.setState({ preReqs: '' });
+        setName('');
+        setClassCode('');
+        setPreReqs('');
 
     }
-
+    async function submitNewClass (classInfo) {
+        await axios.post('/submit', classInfo)
+        return
+    }
     function validate() {
-        this.setState({ nameError: '' });
-        this.setState({ classcodeError: '' });
+        // setFormData({ nameError: '' });
+        // setFormData({ classcodeError: '' });
         let fast = 1;
 
-        //console.log('no way 2');
-        if (!formData.name) {
-            this.setState({ nameError: "name cannot be empty" });
-            ////console.log('no way!');
-            this.setState({ valid: false });
-            fast = 0;
-
-            // return false;
+        if (!name) {
+            
+            setNameError("name cannot be empty")
+            setValid(false);
+            fast = 0;    
         }
-        if (!formData.classcode) {
-            this.setState({ classcodeError: "class code cannot be empty" });
-            this.setState({ valid: false });
+        if (!classCode) {
+            setClassCodeError("class code cannot be empty")
+            setValid(false)
             fast = 0;
 
             //return false;
@@ -95,7 +114,6 @@ function Classform (){
         }
 
     }
-
     function onFocus() {
         //
         //document.querySelector(document).ready(()=>{
@@ -165,26 +183,26 @@ function Classform (){
             <form id="classform" className="card" onSubmit={handleSubmit} autoComplete="new-password" >
                 <legend className="card-header justify-content-start d-flex p-6">
                     <span className="d-none d-sm-block">Add a new class here</span>
-                    <button class="btn btn-primary d-sm-none" type="button" data-bs-toggle="collapse" data-bs-target="#formCollapse" aria-expanded="false" aria-controls="formCollapse">
+                    <button className="btn btn-primary d-sm-none" type="button" data-bs-toggle="collapse" data-bs-target="#formCollapse" aria-expanded="false" aria-controls="formCollapse">
                         New Class
                     </button>
                 </legend>
                 <div id="formCollapse" className="card-body collapse">
                     <div className="mb-2">
                         <label htmlFor="name">Name</label>
-                        <input type="text" id="name" name={Date.now()} autoComplete="new-password"
-                            className={formData.nameError ? 'form-control incorrect' : 'form-control'} value={formData.name}
-                            onChange={handleChange} list="options"></input>
+                        <input type="text" id="name" autoComplete="new-password"
+                            className={nameError ? 'form-control incorrect' : 'form-control'} value={name}
+                            onChange={handleNameChange} list="options"></input>
 
-                        <div className="errorMsg">{formData.valid ? '' : formData.nameError}</div>
-                        {formData.name !== '' ? <Dropdown list={formData.dropdowndb} type={"name"} /> : ''}
+                        <div className="errorMsg">{valid ? '' : nameError}</div>
+                        {name !== '' ? <Dropdown list={dropdowndb} type={"name"} /> : ''}
                     </div>
                     <div className="mb-2">
                         <label htmlFor="classcode">Class Code</label>
-                        <input type="text" id="classcode" className={formData.classcodeError ? 'incorrect' : 'form-control'}
-                            value={formData.classcode} onChange={codeChange}></input>
+                        <input type="text" id="classcode" className={classCodeError ? 'form-control incorrect' : 'form-control'}
+                            value={classCode} onChange={codeChange}></input>
 
-                        <div className="errorMsg">{formData.valid ? '' : formData.classcodeError}</div>
+                        <div className="errorMsg">{valid ? '' : classCodeError}</div>
                     </div>
 
 
@@ -211,8 +229,8 @@ function Classform (){
 
 function Dropdown(props) {
     let type = props.type;
-
-    let filtereditems = props.list.filter((item) => {
+    console.log(props)
+    let filtereditems = props.list?.filter((item) => {
 
         //if(item.name.toLowerCase().includes(props.name.toLowerCase())){
         if (type == 'name')
@@ -226,7 +244,7 @@ function Dropdown(props) {
 
     // console.log(filtereditems);
 
-    const items = filtereditems.map((item) => {
+    const items = filtereditems?.map((item) => {
 
 
         return <option value={item.name} />
@@ -234,7 +252,7 @@ function Dropdown(props) {
 
     });
     console.log(items);
-    if (items.length !== 0) {
+    if (items?.length !== 0) {
         return (
             <datalist id="options">
                 {items}

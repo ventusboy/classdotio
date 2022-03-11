@@ -86,18 +86,25 @@ app.post('/submit', async (req, res) => {
     // console.log('it worked');
     console.log(req.body);
     let payload = req.body
-    let classCode = payload.area + payload.code
+    // let classCode = payload.area + payload.code
+    let classCode = payload.classCode.replace(' ', '')
+    let index = classCode.search(/\d/)
+    console.log(index)
+    let area = classCode.substring(0, index)
+    let code = classCode.substring(index)
 
     let classInfo = {
         name: payload.name,
         preReqs: payload.preReqs || [],
-        code: payload.code,
-        area: payload.area,
-        description: payload.description,
-        color: payload.color,
-        rank: payload.rank,
-        completed: payload.completed,
+        code,
+        area,
+        email: payload.email,
+        description: payload.description || '',
+        color: payload.color || '',
+        rank: payload.rank || '',
+        completed: payload.completed || false,
     }
+    console.log(classInfo)
     // console.log(json.name);
 
     //mongodb test
@@ -105,7 +112,7 @@ app.post('/submit', async (req, res) => {
     // console.log(json);
 
     // userClasses.doc(classCode).set(json)
-    await findUserClass(payload).set(classInfo)
+    await findUserClass(classInfo).set(classInfo)
     console.log('done')
     /*, function (err, res) {
       if (err) throw err;
@@ -133,6 +140,7 @@ app.post('/submit', async (req, res) => {
     // perform actions on the collection object
 
     // console.log('db_updated!');
+    return
 
 });
 
@@ -229,6 +237,7 @@ app.get('/universaldb', async (req, res) => {
 });
 function findUserClass({ email, area, code }) {
     // this function will get the ref of a classItem that exists or it will create one
+    console.log(area, code)
     try {
         let data = db.collection("users").doc(email).collection("classes").doc(area + code)
         console.log(data)
