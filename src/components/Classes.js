@@ -1,4 +1,5 @@
 import axios from "axios";
+import { data } from "jquery";
 import React, { useEffect, useState } from "react";
 import { render } from "react-dom";
 import Search from "../components/Search"
@@ -7,15 +8,8 @@ import Singlecard from "./Singlecard";
 
 
 function Classes(props) {
-    const [userClasses, setUserClasses] = useState([])
     const [searchText, setSearchText] = useState('')
 
-    useEffect(() => {
-        console.log(props.user)
-        axios.post('/getUserInfo',{ email: props.user.email }).then((userInfo) => {
-            console.log(userInfo)
-        })
-    })
     return(
         <div className="col-11 col-sm-8">
             <div>

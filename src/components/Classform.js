@@ -15,7 +15,7 @@ const initstate = {
     dropdowndb: [1, 2, 3]
 }
 
-function Classform (){
+function Classform (props){
     const [name, setName] = useState('')
     const [classCode, setClassCode] = useState('')
     const [preReqs, setPreReqs] = useState('')
@@ -66,7 +66,7 @@ function Classform (){
         event.preventDefault();
         if (validate()) {
             // this.props.newclass();
-            submitNewClass({
+            props.submitNewClass({
                 name,
                 classCode,
                 preReqs,
@@ -78,10 +78,6 @@ function Classform (){
         setClassCode('');
         setPreReqs('');
 
-    }
-    async function submitNewClass (classInfo) {
-        await axios.post('/submit', classInfo)
-        return
     }
     function validate() {
         // setFormData({ nameError: '' });

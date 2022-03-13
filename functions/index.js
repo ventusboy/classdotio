@@ -69,8 +69,10 @@ app.post('/getUserInfo', async function (req, res) {
     console.log(req.body)
     let { email } = req.body
   try {
-    let userInfo = await db.collection("users").doc(email).get();
-    res.json(userInfo)
+    let userInfo = db.collection("users").doc(email).collection("classes")
+    let classes = await userInfo.get();
+    classes = classes.docs.map(doc => doc.data())
+    res.json(classes)
   } catch (error) {
     res.json({error})
   }
@@ -119,10 +121,11 @@ app.post('/submit', async (req, res) => {
       console.log("1 document inserted");
   
     }); */
-
+    /* implement later
     if (!await db.collection("allClasses").get(classCode)) {
         await db.collection("allClasses").doc(classCode).set(classInfo)
     }
+    */
     // let universalClasses = db.collection("classes").doc().set();
     // console.log(json);
 
@@ -140,7 +143,7 @@ app.post('/submit', async (req, res) => {
     // perform actions on the collection object
 
     // console.log('db_updated!');
-    return
+    res.json()
 
 });
 
@@ -237,7 +240,7 @@ app.get('/universaldb', async (req, res) => {
 });
 function findUserClass({ email, area, code }) {
     // this function will get the ref of a classItem that exists or it will create one
-    console.log(area, code)
+    // console.log(area, code)
     try {
         let data = db.collection("users").doc(email).collection("classes").doc(area + code)
         console.log(data)
