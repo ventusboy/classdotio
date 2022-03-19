@@ -66,10 +66,12 @@ app.get('*', (req, res) => {
 })
 
 app.post('/getUserInfo', async function (req, res) {
-    console.log(req.body)
+    // console.log(req.body)
+    // console.log(req.headers)
     let { email } = req.body
+    let { sub } = req.headers
   try {
-    let userInfo = db.collection("users").doc(email).collection("classes")
+    let userInfo = db.collection("users").doc(sub).collection("classes")
     let classes = await userInfo.get();
     classes = classes.docs.map(doc => doc.data())
     res.json(classes)
@@ -88,6 +90,7 @@ app.post('/submit', async (req, res) => {
     // console.log('it worked');
     console.log(req.body);
     let payload = req.body
+    let { sub } = req.headers
     // let classCode = payload.area + payload.code
     let classCode = payload.classCode.replace(' ', '')
     let index = classCode.search(/\d/)
@@ -100,7 +103,6 @@ app.post('/submit', async (req, res) => {
         preReqs: payload.preReqs || [],
         code,
         area,
-        email: payload.email,
         description: payload.description || '',
         color: payload.color || '',
         rank: payload.rank || '',
@@ -114,7 +116,7 @@ app.post('/submit', async (req, res) => {
     // console.log(json);
 
     // userClasses.doc(classCode).set(json)
-    await findUserClass(classInfo).set(classInfo)
+    await findUserClass({ payload: classInfo, sub}).set(classInfo)
     console.log('done')
     /*, function (err, res) {
       if (err) throw err;
@@ -150,7 +152,10 @@ app.post('/submit', async (req, res) => {
 app.post('/delete', (req, res) => {
     // db.collection("users").doc(email).collection("classes").doc(classCode).delete()
     let payload = req.body
-    findUserClass(payload).delete()
+    let { sub } = req.headers
+    console.log(payload)
+    findUserClass({ payload, sub }).delete()
+    res.json()
     /*let json = req.body;
   
     let query = { area: json.area, code: json.code, email: json.email };
@@ -238,12 +243,13 @@ app.get('/universaldb', async (req, res) => {
         res.send(payload);
     });*/
 });
-function findUserClass({ email, area, code }) {
+function findUserClass({ sub, payload }) {
     // this function will get the ref of a classItem that exists or it will create one
     // console.log(area, code)
+    let { area, code } = payload
     try {
-        let data = db.collection("users").doc(email).collection("classes").doc(area + code)
-        console.log(data)
+        let data = db.collection("users").doc(sub).collection("classes").doc(area + code)
+        // console.log(data)
         return data
     } catch (error) {
         console.log(error)

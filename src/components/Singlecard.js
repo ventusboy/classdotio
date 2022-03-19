@@ -2,68 +2,64 @@ import React from "react";
 
 function Singlecard (props) {
 
-    /*constructor(props) {
-        super(props);
-        console.log(this.props.data);
-        this.state = this.props.data;
-        this.onDelete = this.onDelete.bind(this);
-    } */
+    console.log(props.item?.name);
+    let { item } = props;
+    console.log(item)
 
     function onDelete() {
-        console.log('item');
-        props.delete(this.props.data);
+        props.removeClass(item);
     }
 
-    console.log(props.data?.name);
-    let { data } = props;
-
     return (
-        <div id={data.area + '-' + data.code} className={preReqsMet(data) + ' classCard col-10 container offset-1'}>
+        <div id={item.area + '-' + item.code} className={preReqsMet(item) + ' classCard col-10 container offset-1'}>
             <div className="row">
-                <h3 className="col-xl-4 col-sm-4">{data.area + ' ' + data.code}</h3>
-                <h3 className="col-xl-7 col-sm-6">{data.name}</h3>
-                <img className="col-xl-1 col-sm-2 deletebtn d-flex justify-content-end" src="./assets/delete.svg" onClick={() => { this.onDelete() }} />
+                <h3 className="col-xl-4 col-sm-4">{item.area + ' ' + item.code}</h3>
+                <h3 className="col-xl-7 col-sm-6">{item.name}</h3>
+                <img className="col-xl-1 col-sm-2 deletebtn d-flex justify-content-end" src="./assets/delete.svg" onClick={() => { onDelete() }} />
             </div>
             <div className="row">
-                <h4 className="col-8">pre-reqs: <PreReqList list={data.preReq} /> </h4>
-                <h4 className="col-4">completed: {data.completed ? 'yes' : 'no'}</h4>
+                <h4 className="col-8">pre-reqs: <PreReqList list={item.preReqs} /> </h4>
+                <h4 className="col-4">completed: {item.completed ? 'yes' : 'no'}</h4>
             </div>
             <div className="row">
-                <p className="col-12">description: the course you need to learn all about {data.name}</p>
+                <p className="col-12">description: the course where you learn all about {item.name}</p>
             </div>
         </div>
     );
 }
 
 function PreReqList(props) {
+    if (!Array.isArray(props.list)) {
+        return (<div></div>)
+    }
     return props.list.map((item) =>
         <button
             type="button"
-            key={item.toString()}
+            key={`${item.area}-${item.code}`.toString()}
             onClick={navigateTo}
             className="btn btn-secondary"
-            value={item.replace(' ', '-')} 
+            value={`${item.area}-${item.code}`} 
         >
-            {item} 
+            {`${item.area}-${item.code}`} 
         </button>
     );
 }
 
 function navigateTo(obj) {
     let button = obj.target;
-
+    console.log(button.value)
     let elmnt = document.getElementById(button.value);
-    //console.log("#"+button.value);
-    elmnt.scrollIntoView({ behavior: "smooth", block: "start", inline: "nearest" });
+    console.log(elmnt);
+    elmnt && elmnt.scrollIntoView({ behavior: "smooth", block: "start", inline: "nearest" });
 }
 
-function preReqsMet(info) {
-    let pre = info.pre;
+function preReqsMet(item) {
+    let pre = item.pre;
     //console.log(completedArray);
     //console.log(pre);
-    if (info.completed) {
-        info.color = 'blue';
-        info.rank = '1';
+    if (item.completed) {
+        item.color = 'blue';
+        item.rank = '1';
         //console.log('blue');
         return 'blue';
     }
@@ -71,15 +67,15 @@ function preReqsMet(info) {
         // put back later
         /*for (var i = 0; i < pre.length; i++) {
             if (!completedArray.includes(pre[i])) {
-                info.color = 'red';
-                info.rank = '3';
+                item.color = 'red';
+                item.rank = '3';
                 //console.log('red');
                 return 'red';
             }
         }*/
-        //info.rank='2';
-        info.color = 'yellow';
-        info.rank = '2'
+        //item.rank='2';
+        item.color = 'yellow';
+        item.rank = '2'
         //console.log('yellow');
         return 'yellow';
     }

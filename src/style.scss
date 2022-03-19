@@ -79,6 +79,18 @@ input{
 
 }
 
+#class-holder {
+    @media only screen and (min-width: 576px) {
+        height: 74vh;
+    }
+    //300px;
+    overflow-y: scroll;
+}
+
+footer {
+    // height: 6vh;
+}
+
 .drop-down{
     //background: rebeccapurple;
     //position: absolute;

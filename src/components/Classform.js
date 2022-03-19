@@ -18,8 +18,8 @@ const initstate = {
 function Classform (props){
     const [name, setName] = useState('')
     const [classCode, setClassCode] = useState('')
-    const [preReqs, setPreReqs] = useState('')
-    const [completed, setCompleted] = useState('')
+    // const [preReqs, setPreReqs] = useState([])
+    const [completed, setCompleted] = useState(false)
     const [valid, setValid] = useState(true)
     const [dropdowndb, setDropdowndb] = useState([])
     const [classCodeError, setClassCodeError] = useState('')
@@ -27,20 +27,6 @@ function Classform (props){
     
     const { user } = useAuth0();
 
-     
-
-    /*constructor(props) {
-        super(props);
-        formData = initstate;
-        this.handleChange = this.handleChange.bind(this);
-        this.codeChange = this.codeChange.bind(this);
-        this.handleSubmit = this.handleSubmit.bind(this);
-        this.validate = this.validate.bind(this);
-        this.onFocus = this.onFocus.bind(this);
-        this.onBlur = this.onBlur.bind(this);
-        this.changeState = this.changeState.bind(this);
-
-    }*/
     useEffect(() => {
         if (window.innerWidth > 576) {
             document.getElementById('formCollapse').classList.remove('collapse')
@@ -62,52 +48,67 @@ function Classform (props){
         }
     }
 
+    function formatPreReqs() {
+        let items = document.getElementById('preReqs').value
+        if (items.length > 6) {
+            items = items.toUpperCase().replace(/\s+/g, '').split(",")
+        } else {
+            return []
+        }
+        items = items.map((item) => {
+            try {
+                let index = item.search(/\d/)
+                let area = item.substring(0, index)
+                let code = item.substring(index) 
+                if (area.length !== 3 || code.length > 5) {
+                    throw(Error('Prerequisite area or code is incorrect'))
+                }
+                return {
+                    area,
+                    code
+                }
+            } catch (error) {
+                console.log(error)
+                return {error}
+            }
+        })
+        return items
+    }
+
     function handleSubmit(event) {
         event.preventDefault();
-        if (validate()) {
-            // this.props.newclass();
+        let preReqs = formatPreReqs()
+        if (validate(preReqs)) {
             props.submitNewClass({
-                name,
-                classCode,
+                name: name.toUpperCase(),
+                classCode: classCode.toUpperCase(),
                 preReqs,
-                completed,
-                email: user.email
+                completed
             })
         }
         setName('');
         setClassCode('');
-        setPreReqs('');
+        document.getElementById('preReqs').value = ''
 
     }
-    function validate() {
-        // setFormData({ nameError: '' });
-        // setFormData({ classcodeError: '' });
-        let fast = 1;
-
+    function validate(preReqs) {
         if (!name) {
             
-            setNameError("name cannot be empty")
+            setNameError("Name cannot be empty")
             setValid(false);
-            fast = 0;    
         }
         if (!classCode) {
-            setClassCodeError("class code cannot be empty")
+            setClassCodeError("Class code cannot be empty")
             setValid(false)
-            fast = 0;
-
-            //return false;
         }
-
-        ////console.log('the final state is ' + formData.valid);
-
-        if (fast === 1) {
-            //this.setState({ valid: true });   
-            return true;
+        if (preReqs.length > 0) {
+            preReqs.forEach((item) => {
+                if (item.error)
+                    setValid(false)
+            })
         }
-        else {
-            //this.setState({valid: true});
-            return false;
-        }
+        
+        return valid
 
     }
     function onFocus() {
@@ -179,24 +180,42 @@ function Classform (props){
             <form id="classform" className="card" onSubmit={handleSubmit} autoComplete="new-password" >
                 <legend className="card-header justify-content-start d-flex p-6">
                     <span className="d-none d-sm-block">Add a new class here</span>
-                    <button className="btn btn-primary d-sm-none" type="button" data-bs-toggle="collapse" data-bs-target="#formCollapse" aria-expanded="false" aria-controls="formCollapse">
+                    <button
+                        className="btn btn-primary d-sm-none"
+                        type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#formCollapse"
+                        aria-expanded="false"
+                        aria-controls="formCollapse"
+                    >
                         New Class
                     </button>
                 </legend>
                 <div id="formCollapse" className="card-body collapse">
                     <div className="mb-2">
                         <label htmlFor="name">Name</label>
-                        <input type="text" id="name" autoComplete="new-password"
-                            className={nameError ? 'form-control incorrect' : 'form-control'} value={name}
-                            onChange={handleNameChange} list="options"></input>
+                        <input
+                            type="text"
+                            id="name"
+                            autoComplete="new-password"
+                            className={nameError ? 'form-control incorrect' : 'form-control'}
+                            value={name}
+                            onChange={handleNameChange}
+                            list="options"
+                        ></input>
 
                         <div className="errorMsg">{valid ? '' : nameError}</div>
                         {name !== '' ? <Dropdown list={dropdowndb} type={"name"} /> : ''}
                     </div>
                     <div className="mb-2">
                         <label htmlFor="classcode">Class Code</label>
-                        <input type="text" id="classcode" className={classCodeError ? 'form-control incorrect' : 'form-control'}
-                            value={classCode} onChange={codeChange}></input>
+                        <input
+                            type="text"
+                            id="classcode"
+                            className={classCodeError ? 'form-control incorrect' : 'form-control'}
+                            value={classCode}
+                            onChange={codeChange}
+                        ></input>
 
                         <div className="errorMsg">{valid ? '' : classCodeError}</div>
                     </div>
@@ -204,7 +223,16 @@ function Classform (props){
 
                     <div className="mb-2">
                         <label htmlFor="classcode">Completed:</label>
-                        <input type="checkbox" name="complete" id="completed" className="" style={{ marginLeft: '20px' }}></input>
+                        <input
+                            type="checkbox"
+                            name="complete"
+                            id="completed"
+                            className=""
+                            style={{ marginLeft: '20px' }}
+                            onClick={() => {
+                                setCompleted(!completed)
+                            }}
+                        ></input>
                     </div>
 
                     <div className="mb-2">
