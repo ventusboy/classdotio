@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { render } from "react-dom";
 import axios from "axios";
 import Classform from "../components/Classform"
 import Classes from "../components/Classes"
@@ -8,20 +7,15 @@ import Classes from "../components/Classes"
 function DashBoard(props) {
     const [userClasses, setUserClasses] = useState([])
     const [changes, setChanges] = useState(0)
-    let classes = []
     axios.defaults.headers.common['sub'] = props.user.sub;
 
     
     useEffect(() => {
         async function getClasses () {
-            let { data } = await axios.post('/getUserInfo', { email: props.user.email })
-            classes = data
-            // console.log(data)
-            // classCount = classes.length
-            setUserClasses(classes)
+            let { data } = await axios.post('/getUserInfo')
+            setUserClasses(data)
         }
         getClasses()
-        // classes = getClasses()
     },[changes])
 
     async function submitNewClass (classInfo) {
@@ -36,7 +30,6 @@ function DashBoard(props) {
     }
 
     async function removeClass(obj) {
-        // this.props.delete(obj);
         setUserClasses(userClasses.filter(item => item.area + item.code !== obj.area +obj.code))
         await axios.post('/delete', obj)
         setChanges(changes + 1)

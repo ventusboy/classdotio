@@ -5,7 +5,7 @@ import { useAuth0 } from "../react-auth0-spa";
 import { NavLink } from "react-router-dom";
 
 const NavBar = () => {
-    const { isAuthenticated, loginWithRedirect, logout } = useAuth0();
+    const { isAuthenticated, loginWithRedirect } = useAuth0();
 
     return (
         <nav className='navbar navbar-expand-lg navbar-light bg-light '>

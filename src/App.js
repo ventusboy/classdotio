@@ -1,18 +1,13 @@
 import React from 'react';
-//import ReactDOM from 'react-dom';
-//import logo from './logo.svg';
 import './style.scss';
-//import $ from 'jquery';
 import NavBar from "./components/NavBar";
 import { useAuth0 } from "./react-auth0-spa";
 import { Router, Route, Switch } from "react-router-dom";
 import PrivateRoute from "./components/PrivateRoute";
 import Profile from "./components/Profile";
 import history from "./utils/history";
-import ClassCard from "./components/ClassCard.js";
 import Home from "./components/Home.js"
 import DashBoard from './pages/DashBoard';
-//import classes from '*.module.css';
 
 
 

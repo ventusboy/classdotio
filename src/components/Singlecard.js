@@ -1,10 +1,7 @@
 import React from "react";
 
 function Singlecard (props) {
-
-    console.log(props.item?.name);
     let { item } = props;
-    console.log(item)
 
     function onDelete() {
         props.removeClass(item);
@@ -15,7 +12,7 @@ function Singlecard (props) {
             <div className="row">
                 <h3 className="col-xl-4 col-sm-4">{item.area + ' ' + item.code}</h3>
                 <h3 className="col-xl-7 col-sm-6">{item.name}</h3>
-                <img className="col-xl-1 col-sm-2 deletebtn d-flex justify-content-end" src="./assets/delete.svg" onClick={() => { onDelete() }} />
+                <img className="col-xl-1 col-sm-2 deletebtn d-flex justify-content-end" src="./assets/delete.svg" onClick={() => { onDelete() }}  alt="Delete Icon"  />
             </div>
             <div className="row">
                 <h4 className="col-8">pre-reqs: <PreReqList list={item.preReqs} /> </h4>
@@ -47,20 +44,14 @@ function PreReqList(props) {
 
 function navigateTo(obj) {
     let button = obj.target;
-    console.log(button.value)
     let elmnt = document.getElementById(button.value);
-    console.log(elmnt);
     elmnt && elmnt.scrollIntoView({ behavior: "smooth", block: "start", inline: "nearest" });
 }
 
 function preReqsMet(item) {
-    let pre = item.pre;
-    //console.log(completedArray);
-    //console.log(pre);
     if (item.completed) {
         item.color = 'blue';
         item.rank = '1';
-        //console.log('blue');
         return 'blue';
     }
     else {
@@ -76,7 +67,6 @@ function preReqsMet(item) {
         //item.rank='2';
         item.color = 'yellow';
         item.rank = '2'
-        //console.log('yellow');
         return 'yellow';
     }
 }

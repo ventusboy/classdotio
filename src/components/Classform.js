@@ -112,7 +112,6 @@ function Classform (props){
     }
     function onFocus() {
         document.querySelector('.dropdown-container').removeClass("hide");
-        console.log(Date.now());
         document.querySelector("#name").keyup(function keymove(e) {
 
             if (e.which === 40) {
@@ -207,20 +206,13 @@ function Classform (props){
 
 function Dropdown(props) {
     let type = props.type;
-    console.log(props)
     let filtereditems = props.list?.filter((item) => {
-
-        //if(item.name.toLowerCase().includes(props.name.toLowerCase())){
         if (type == 'name')
             return item.name;
         else if (type == 'code')
             return item.area + ' ' + item.code;
-
-        //}
-
     });
 
-    // console.log(filtereditems);
 
     const items = filtereditems?.map((item) => {
 
@@ -229,7 +221,6 @@ function Dropdown(props) {
 
 
     });
-    console.log(items);
     if (items?.length !== 0) {
         return (
             <datalist id="options">
