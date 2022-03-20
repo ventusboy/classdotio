@@ -29,12 +29,6 @@
     // overflow-y: scroll;
 }
 
-.App {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-}
-
 body{
     background-color: beige;
     height: 100vh;
@@ -59,12 +53,6 @@ input{
     background-color: rgba(255, 251, 0, 0.692);
 }
 
-.cardHeader{
-    // display: flex;
-    // flex-flow: row;
-    //justify-content: space-around;
-}
-
 .incorrect{
     border: red solid 1px;
 }
@@ -79,11 +67,28 @@ input{
 
 }
 
+.App {
+    justify-content: stretch;
+    align-items: stretch;
+}
+
+#classes {
+    >div{
+        min-height: 0;
+    }
+}
+
 #class-holder {
     @media only screen and (min-width: 576px) {
-        height: 74vh;
+        // height: 100%;
+        // align-self: stretch;
     }
+    // height: calc(100vh - calc(1.275rem - 72px));// (68vh);
+    //height: 100%;
     //300px;
+    flex: 1 1 1px;
+    min-width: 0;
+
     overflow-y: scroll;
 }
 

@@ -27,8 +27,8 @@ function App() {
 	}
 
 	return (
-		<div className="App">
-			<div>
+		<div className="App d-flex flex-grow-1 flex-column justify-content-between">
+			<div className="d-flex flex-grow-1 flex-column">
 				{/* Don't forget to include the history module */}
 				<Router history={history}>
 					<header className='sticky-top'>

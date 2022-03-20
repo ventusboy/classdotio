@@ -18,7 +18,6 @@ const initstate = {
 function Classform (props){
     const [name, setName] = useState('')
     const [classCode, setClassCode] = useState('')
-    // const [preReqs, setPreReqs] = useState([])
     const [completed, setCompleted] = useState(false)
     const [valid, setValid] = useState(true)
     const [dropdowndb, setDropdowndb] = useState([])
@@ -112,8 +111,6 @@ function Classform (props){
 
     }
     function onFocus() {
-        //
-        //document.querySelector(document).ready(()=>{
         document.querySelector('.dropdown-container').removeClass("hide");
         console.log(Date.now());
         document.querySelector("#name").keyup(function keymove(e) {
@@ -121,11 +118,7 @@ function Classform (props){
             if (e.which === 40) {
                 console.log('yeet!');
             }
-            //e.target.removeEventListener(e.type, keymove);
         });
-
-
-        // });
     }
 
     function onBlur() {
@@ -136,47 +129,8 @@ function Classform (props){
 
     }
 
-    /*componentDidMount() {
-
-        let reqHeader = new Headers();
-        reqHeader.append('Accept', 'application/json');
-        let initObject = {
-            method: 'GET', headers: reqHeader,
-        };
-        // console.log(this.props)
-
-        axios.post('/submit', {
-            name: 'Bio 1',
-            preReqs: [],
-            code: '1001',
-            area: 'BIO',
-            description: 'intro to Bio 1',
-            color: 'yellow',
-            rank: 1,
-            completed: false,
-            email: this.props.user.email
-        })
-        .then((data) => {
-            console.log(data)
-        })
-
-        fetch('/universaldb', initObject)
-            .then((response) => {
-                return response.json();
-                //dropdowndb=response.json();
-            })
-            .then((data) => {
-                //console.log(data);
-                this.setState({ dropdowndb: data });
-            })
-            .catch((err) => {
-                console.log("fetch request is broken");
-                console.log(err);
-            });
-    }*/
-
     return (
-        <div className="col-11 col-sm-3">
+        <div className="col-11 col-sm-4 col-md-3">
             <form id="classform" className="card" onSubmit={handleSubmit} autoComplete="new-password" >
                 <legend className="card-header justify-content-start d-flex p-6">
                     <span className="d-none d-sm-block">Add a new class here</span>

@@ -11,20 +11,17 @@ function Classes(props) {
     const [searchText, setSearchText] = useState('')
 
     return(
-        <div className="col-11 col-sm-8">
-            <div>
-                <div className="card">
-                    <div className="d-flex card-header align-items-center">
-                        <h1 className="col-4">Classes</h1>
-                        <div className="col-8">
-                            <Search />
-                        </div>
+        <div id="classes" className="col-11 col-sm-8 d-flex flex-grow-1">
+            <div className="card d-flex flex-grow-1">
+                <div className="d-flex card-header align-items-center">
+                    <h1 className="col-4">Classes</h1>
+                    <div className="col-8">
+                        <Search />
                     </div>
-                    <div id="class-holder" className="card-body container-fluid">
-                        <div className="row">
-                            <ClassList classes={props.classes} removeClass={props.removeClass} />
-                            {/*<Singlecard data={props.user} list={userClasses} searchtext={searchText} />*/}
-                        </div>
+                </div>
+                <div id="class-holder" className="card-body container-fluid">
+                    <div className="row">
+                        <ClassList classes={props.classes} removeClass={props.removeClass} />
                     </div>
                 </div>
             </div>
@@ -41,7 +38,6 @@ function ClassList(props) {
         return b.area - a.area
     })
     let filteredItems = classes.map((item) => {
-        console.log('loading ' + item.name);
         return <Singlecard key={item.area + item.code} removeClass={props.removeClass} item={item} />
     });
 
