@@ -37,7 +37,7 @@ function DashBoard(props) {
 
     return (
         <div id="dashboard" className="d-flex flex-grow-1 container-fluid mt-3" >
-            <div className="row flex-grow-1 justify-content-center justify-content-sm-evenly g-3">
+            <div className="row flex-column flex-md-row flex-grow-1 justify-content-center justify-content-md-evenly g-3">
                 <Classform user={props.user} submitNewClass={submitNewClass}/>
                 <Classes user={props.user} classes={userClasses} removeClass={removeClass}/>
             </div>

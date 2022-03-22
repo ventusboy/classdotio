@@ -129,7 +129,7 @@ function Classform (props){
     }
 
     return (
-        <div className="col-11 col-sm-4 col-md-3">
+        <div className="col-12 col-md-3">
             <form id="classform" className="card" onSubmit={handleSubmit} autoComplete="new-password" >
                 <legend className="card-header justify-content-start d-flex p-6">
                     <span className="d-none d-sm-block">Add a new class here</span>

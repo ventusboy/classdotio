@@ -12,7 +12,7 @@ function Classes(props) {
     }
 
     return(
-        <div id="classes" className="col-11 col-sm-8 d-flex flex-grow-1">
+        <div id="classes" className="col-12 col-md-8 d-flex flex-grow-1">
             <div className="card d-flex flex-grow-1">
                 <div className="d-flex card-header align-items-center">
                     <h1 className="col-4">Classes</h1>
