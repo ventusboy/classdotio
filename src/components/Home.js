@@ -6,7 +6,7 @@ const Home = () => {
     console.log("Home");
     return (
         <Fragment>
-            <div className="mainbody">
+            <div className="mainbody container-fluid">
 
 
                 <div className="row d-flex justify-content-center">
@@ -15,8 +15,8 @@ const Home = () => {
                     </h1>
                 </div>
                 <div className="row d-flex  justify-content-center">
-                    <h4 className="col-8 text-center">
-                        <span>    </span>Classdotio is an interactive Web Application using React, Node.js, Auth0, and MongoDB to
+                    <h4 className="col-12 col-md-10 text-center">
+                        <span>    </span>Classdotio is an interactive Web Application using React, Node.js, Auth0, and Firebase Firestore to
                     visually tell users
                     which classes they have taken, which classes they are eligible to take, and which classes
                     they are

@@ -1,5 +1,5 @@
-import axios from "axios";
 import React, { useEffect, useState } from "react";
+import { Button } from "react-bootstrap";
 import { useAuth0 } from "../react-auth0-spa";
 
 const initstate = {
@@ -121,7 +121,7 @@ function Classform (props){
     }
 
     function onBlur() {
-        document.querySelector(document).ready(() => {
+        document.querySelector("document").ready(() => {
             document.querySelector('.dropdown-container').addClass("hide");
             document.querySelector('#name').unbind("keyup");
         });
@@ -132,9 +132,9 @@ function Classform (props){
         <div className="col-12 col-md-3">
             <form id="classform" className="card" onSubmit={handleSubmit} autoComplete="new-password" >
                 <legend className="card-header justify-content-start d-flex p-6">
-                    <span className="d-none d-sm-block">Add a new class here</span>
-                    <button
-                        className="btn btn-primary d-sm-none"
+                    <span className="d-none d-md-block">Add a new class here</span>
+                    <Button
+                        className="btn btn-primary d-md-none"
                         type="button"
                         data-bs-toggle="collapse"
                         data-bs-target="#formCollapse"
@@ -142,7 +142,7 @@ function Classform (props){
                         aria-controls="formCollapse"
                     >
                         New Class
-                    </button>
+                    </Button>
                 </legend>
                 <div id="formCollapse" className="card-body collapse">
                     <div className="mb-2">
@@ -158,7 +158,8 @@ function Classform (props){
                         ></input>
 
                         <div className="errorMsg">{valid ? '' : nameError}</div>
-                        {name !== '' ? <Dropdown list={dropdowndb} type={"name"} /> : ''}
+                        {name !== '' ? <
+                        Dropdown list={dropdowndb} type={"name"} /> : ''}
                     </div>
                     <div className="mb-2">
                         <label htmlFor="classcode">Class Code</label>

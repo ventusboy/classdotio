@@ -1,13 +1,14 @@
 import React from 'react';
-import './style.scss';
+import { Route, Router, Switch } from "react-router-dom";
+import Home from "./components/Home.js";
 import NavBar from "./components/NavBar";
-import { useAuth0 } from "./react-auth0-spa";
-import { Router, Route, Switch } from "react-router-dom";
 import PrivateRoute from "./components/PrivateRoute";
 import Profile from "./components/Profile";
-import history from "./utils/history";
-import Home from "./components/Home.js"
 import DashBoard from './pages/DashBoard';
+import { useAuth0 } from "./react-auth0-spa";
+import history from "./utils/history";
+import 'bootstrap/dist/css/bootstrap.min.css';
+
 
 
 
