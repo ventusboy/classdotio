@@ -31,7 +31,7 @@ function Classform(props) {
     useEffect(() => {
         if (window.innerWidth > 576) {
             // document.getElementById('formCollapse').classList.remove('collapse')
-            setOpen(true)
+            // setOpen(true)
         }
     })
 
@@ -151,7 +151,7 @@ function Classform(props) {
                         New Class
                     </Button>
                 </legend>
-                <Collapse in={open}>
+                <Collapse in={open || window.innerWidth >= 576}>
                     <div className="">
                         <div id="formCollapse" className="card-body">
                             <div className="mb-2">
