@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Button } from "react-bootstrap";
+import { Button, Collapse } from "react-bootstrap";
 import { useAuth0 } from "../react-auth0-spa";
 
 const initstate = {
@@ -15,7 +15,7 @@ const initstate = {
     dropdowndb: [1, 2, 3]
 }
 
-function Classform (props){
+function Classform(props) {
     const [name, setName] = useState('')
     const [classCode, setClassCode] = useState('')
     const [completed, setCompleted] = useState(false)
@@ -23,18 +23,21 @@ function Classform (props){
     const [dropdowndb, setDropdowndb] = useState([])
     const [classCodeError, setClassCodeError] = useState('')
     const [nameError, setNameError] = useState('')
-    
+    const [open, setOpen] = useState(false);
+
+
     const { user } = useAuth0();
 
     useEffect(() => {
         if (window.innerWidth > 576) {
-            document.getElementById('formCollapse').classList.remove('collapse')
+            // document.getElementById('formCollapse').classList.remove('collapse')
+            setOpen(true)
         }
     })
 
     function handleNameChange(event) {
         setName(event.target.value);
-        if(!valid && event.target.value.length > 0) {
+        if (!valid && event.target.value.length > 0) {
             setNameError('')
         }
     }
@@ -42,7 +45,7 @@ function Classform (props){
 
     function codeChange(event) {
         setClassCode(event.target.value);
-        if(!valid && event.target.value.length > 0) {
+        if (!valid && event.target.value.length > 0) {
             setClassCodeError('')
         }
     }
@@ -58,9 +61,9 @@ function Classform (props){
             try {
                 let index = item.search(/\d/)
                 let area = item.substring(0, index)
-                let code = item.substring(index) 
+                let code = item.substring(index)
                 if (area.length !== 3 || code.length > 5) {
-                    throw(Error('Prerequisite area or code is incorrect'))
+                    throw (Error('Prerequisite area or code is incorrect'))
                 }
                 return {
                     area,
@@ -68,7 +71,7 @@ function Classform (props){
                 }
             } catch (error) {
                 console.log(error)
-                return {error}
+                return { error }
             }
         })
         return items
@@ -92,7 +95,7 @@ function Classform (props){
     }
     function validate(preReqs) {
         if (!name) {
-            
+
             setNameError("Name cannot be empty")
             setValid(false);
         }
@@ -106,7 +109,7 @@ function Classform (props){
                     setValid(false)
             })
         }
-        
+
         return valid
 
     }
@@ -140,63 +143,71 @@ function Classform (props){
                         data-bs-target="#formCollapse"
                         aria-expanded="false"
                         aria-controls="formCollapse"
+                        onClick={() => {
+                            console.log('opening')
+                            setOpen(!open)}
+                        }
                     >
                         New Class
                     </Button>
                 </legend>
-                <div id="formCollapse" className="card-body collapse">
-                    <div className="mb-2">
-                        <label htmlFor="name">Name</label>
-                        <input
-                            type="text"
-                            id="name"
-                            autoComplete="new-password"
-                            className={nameError ? 'form-control incorrect' : 'form-control'}
-                            value={name}
-                            onChange={handleNameChange}
-                            list="options"
-                        ></input>
+                <Collapse in={open}>
+                    <div className="">
+                        <div id="formCollapse" className="card-body">
+                            <div className="mb-2">
+                                <label htmlFor="name">Name</label>
+                                <input
+                                    type="text"
+                                    id="name"
+                                    autoComplete="new-password"
+                                    className={nameError ? 'form-control incorrect' : 'form-control'}
+                                    value={name}
+                                    onChange={handleNameChange}
+                                    list="options"
+                                ></input>
 
-                        <div className="errorMsg">{valid ? '' : nameError}</div>
-                        {name !== '' ? <
-                        Dropdown list={dropdowndb} type={"name"} /> : ''}
-                    </div>
-                    <div className="mb-2">
-                        <label htmlFor="classcode">Class Code</label>
-                        <input
-                            type="text"
-                            id="classcode"
-                            className={classCodeError ? 'form-control incorrect' : 'form-control'}
-                            value={classCode}
-                            onChange={codeChange}
-                        ></input>
+                                <div className="errorMsg">{valid ? '' : nameError}</div>
+                                {name !== '' ? <
+                                    Dropdown list={dropdowndb} type={"name"} /> : ''}
+                            </div>
+                            <div className="mb-2">
+                                <label htmlFor="classcode">Class Code</label>
+                                <input
+                                    type="text"
+                                    id="classcode"
+                                    className={classCodeError ? 'form-control incorrect' : 'form-control'}
+                                    value={classCode}
+                                    onChange={codeChange}
+                                ></input>
 
-                        <div className="errorMsg">{valid ? '' : classCodeError}</div>
-                    </div>
+                                <div className="errorMsg">{valid ? '' : classCodeError}</div>
+                            </div>
 
 
-                    <div className="mb-2">
-                        <label htmlFor="classcode">Completed:</label>
-                        <input
-                            type="checkbox"
-                            name="complete"
-                            id="completed"
-                            className=""
-                            style={{ marginLeft: '20px' }}
-                            onClick={() => {
-                                setCompleted(!completed)
-                            }}
-                        ></input>
-                    </div>
+                            <div className="mb-2">
+                                <label htmlFor="classcode">Completed:</label>
+                                <input
+                                    type="checkbox"
+                                    name="complete"
+                                    id="completed"
+                                    className=""
+                                    style={{ marginLeft: '20px' }}
+                                    onClick={() => {
+                                        setCompleted(!completed)
+                                    }}
+                                ></input>
+                            </div>
 
-                    <div className="mb-2">
-                        <label htmlFor="preReqs">Pre-req(s):</label>
-                        <input type="text" id="preReqs" className="form-control"></input>
-                    </div>
+                            <div className="mb-2">
+                                <label htmlFor="preReqs">Pre-req(s):</label>
+                                <input type="text" id="preReqs" className="form-control"></input>
+                            </div>
 
-                    <br></br>
-                    <button type="submit" className="btn btn-primary" form="classform">submit</button>
-                </div>
+                            <br></br>
+                            <button type="submit" className="btn btn-primary" form="classform">submit</button>
+                        </div>
+                        </div>
+                </Collapse>
 
             </form>
         </div>
