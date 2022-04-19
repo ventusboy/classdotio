@@ -2,20 +2,19 @@
 
 import React, { Fragment, useRef, useState } from "react";
 import { useAuth0 } from "../react-auth0-spa";
-import { NavLink } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 import { Collapse } from "react-bootstrap";
+import { useEffect } from 'react';
 
 const NavBar = () => {
+    const location = useLocation();
     const { isAuthenticated, loginWithRedirect } = useAuth0();
-    let togglerRef = useRef(null)
-    let collapseRef = useRef(null)
     const [open, setOpen] = useState(false)
-    function collapseNav() {
-        let nav = document.getElementById("togglerTarget");
-        let btn = document.getElementById("navbar-toggler");
-        nav.classList.remove("show");
-        btn.classList.add("collapsed");
-    }
+
+    useEffect(() => {
+        setOpen(false)
+    },[location])
+
     return (
         <nav className='navbar navbar-expand-lg navbar-light bg-light '>
 
@@ -41,8 +40,8 @@ const NavBar = () => {
                         <ul className="navbar-nav">
                             {isAuthenticated && (
                                 <Fragment>
-                                    <li className="nav-item ms-auto me-auto"><NavLink className={"nav-link"} to="/" onSelect={() => null}>Home</NavLink></li>
-                                    <li className="nav-item ms-auto me-auto"><NavLink className={"nav-link"} to="/profile" onSelect={() => null}>Profile</NavLink></li>
+                                    <li className="nav-item ms-auto me-auto"><NavLink className={"nav-link"} to="/" onSelect={() => setOpen(false)}>Home</NavLink></li>
+                                    <li className="nav-item ms-auto me-auto"><NavLink className={"nav-link"} to="/profile" onSelect={() => setOpen(false)}>Profile</NavLink></li>
                                 </Fragment>
                             )}
 
