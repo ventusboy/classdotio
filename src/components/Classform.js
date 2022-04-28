@@ -28,10 +28,9 @@ function Classform(props) {
 
     const { user } = useAuth0();
 
-    useEffect(() => {
+    window.addEventListener('resize', () => {
         if (window.innerWidth > 576) {
-            // document.getElementById('formCollapse').classList.remove('collapse')
-            // setOpen(true)
+            setOpen(true)
         }
     })
 
