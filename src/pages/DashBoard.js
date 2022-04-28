@@ -1,24 +1,33 @@
-import React, { useEffect, useState } from "react";
+import React, { createContext, useEffect, useState } from "react";
 import axios from "axios";
 import Classform from "../components/Classform"
 import Classes from "../components/Classes"
+const ClassesContext = createContext(null)
 
 
 function DashBoard(props) {
     const [userClasses, setUserClasses] = useState([])
     const [changes, setChanges] = useState(0)
+    const [completedClasses, setCompletedClasses] = useState([])
     axios.defaults.headers.common['sub'] = props.user.sub;
 
-    
+
     useEffect(() => {
-        async function getClasses () {
+        async function getClasses() {
             let { data } = await axios.post('/getUserInfo')
             setUserClasses(data)
         }
         getClasses()
-    },[changes])
+    }, [changes])
 
-    async function submitNewClass (classInfo) {
+    useEffect(() => {
+        let array = userClasses.flatMap(element => element.completed ? element.area + element.code : [])
+        setCompletedClasses(array)
+        // console.log(array)
+
+    },[userClasses])
+
+    async function submitNewClass(classInfo) {
         try {
             await axios.post('/submit', classInfo)
             setUserClasses([...userClasses, classInfo])
@@ -30,7 +39,7 @@ function DashBoard(props) {
     }
 
     async function removeClass(obj) {
-        setUserClasses(userClasses.filter(item => item.area + item.code !== obj.area +obj.code))
+        setUserClasses(userClasses.filter(item => item.area + item.code !== obj.area + obj.code))
         await axios.post('/delete', obj)
         setChanges(changes + 1)
     }
@@ -38,12 +47,14 @@ function DashBoard(props) {
     return (
         <div id="dashboard" className="d-flex flex-grow-1 container-fluid mt-3" >
             <div className="row flex-column flex-md-row flex-grow-1 justify-content-center justify-content-md-evenly g-3">
-                <Classform user={props.user} submitNewClass={submitNewClass}/>
-                <Classes user={props.user} classes={userClasses} removeClass={removeClass}/>
+                <Classform user={props.user} submitNewClass={submitNewClass} />
+                <ClassesContext.Provider value={completedClasses}>
+                    <Classes user={props.user} classes={userClasses} removeClass={removeClass} /> 
+                </ClassesContext.Provider>
             </div>
         </div>
     )
 }
 
-
+export { ClassesContext }
 export default DashBoard

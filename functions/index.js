@@ -92,7 +92,7 @@ app.post('/submit', async (req, res) => {
     let payload = req.body
     let { sub } = req.headers
     // let classCode = payload.area + payload.code
-    let classCode = payload.classCode.replace(' ', '')
+    let classCode = payload.classCode.replace(' ', '').toUpperCase()
     let index = classCode.search(/\d/)
     console.log(index)
     let area = classCode.substring(0, index)
@@ -107,6 +107,7 @@ app.post('/submit', async (req, res) => {
         color: payload.color || '',
         rank: payload.rank || '',
         completed: payload.completed || false,
+        id: area + code
     }
     console.log(classInfo)
     // console.log(json.name);
@@ -183,6 +184,7 @@ app.post('/update', async (req, res) => {
         color: payload.color,
         rank: payload.rank,
         completed: payload.completed,
+        id: classCode
     }
 
     await db.collection("allClasses").doc(classCode).set(classInfo)

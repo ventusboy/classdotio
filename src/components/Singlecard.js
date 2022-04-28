@@ -1,14 +1,41 @@
 import React from "react";
 
+import { useContext, useEffect, useState } from "react";
+import { ClassesContext } from "pages/DashBoard";
+
 function Singlecard (props) {
+    let classes = useContext(ClassesContext)
+    let [status, setStatus] = useState('yellow')
     let { item } = props;
 
     function onDelete() {
         props.removeClass(item);
     }
 
+    useEffect(() => {
+        if (item.completed) {
+            item.color = 'blue';
+            setStatus('blue')
+            return
+        }
+        else {
+            for (let i = 0; i < item.preReqs.length; i++) {
+                let { area, code } = item.preReqs[i]
+                if (classes?.includes(area + code)) {
+                    continue                 
+                } else if (i === item.preReqs.length - 1) {
+                    setStatus('red')
+                    return
+                }
+            }
+            item.color = 'yellow';
+            setStatus('yellow')
+            return
+        }
+    },[classes])
+
     return (
-        <div id={item.area + '-' + item.code} className={preReqsMet(item) + ' classCard col-10 container offset-1'}>
+        <div id={item.area + '-' + item.code} className={status + ' classCard col-10 container offset-1'}>
             <div className="row">
                 <div className="col-10 d-flex flex-column">
                     <h3 className="col-xl-4 col-sm-4">{item.area + ' ' + item.code}</h3>
@@ -52,29 +79,6 @@ function navigateTo(obj) {
     let elmnt = document.getElementById(button.value);
     elmnt && elmnt.scrollIntoView({ behavior: "smooth", block: "start", inline: "nearest" });
     button.blur()
-}
-
-function preReqsMet(item) {
-    if (item.completed) {
-        item.color = 'blue';
-        item.rank = '1';
-        return 'blue';
-    }
-    else {
-        // put back later
-        /*for (var i = 0; i < pre.length; i++) {
-            if (!completedArray.includes(pre[i])) {
-                item.color = 'red';
-                item.rank = '3';
-                //console.log('red');
-                return 'red';
-            }
-        }*/
-        //item.rank='2';
-        item.color = 'yellow';
-        item.rank = '2'
-        return 'yellow';
-    }
 }
 
 export default Singlecard
