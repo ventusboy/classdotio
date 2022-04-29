@@ -14,7 +14,6 @@ function Singlecard (props) {
 
     useEffect(() => {
         if (item.completed) {
-            item.color = 'blue';
             setStatus('blue')
             return
         }
@@ -28,11 +27,10 @@ function Singlecard (props) {
                     return
                 }
             }
-            item.color = 'yellow';
             setStatus('yellow')
             return
         }
-    },[classes])
+    },[classes,item])
 
     return (
         <div id={item.area + '-' + item.code} className={status + ' classCard col-10 container offset-1'}>

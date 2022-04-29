@@ -1,6 +1,5 @@
-// src/components/Profile.js
 
-import React, { Fragment } from "react";
+import React from "react";
 import { useAuth0 } from "../react-auth0-spa";
 import { useEffect } from 'react';
 import axios from "axios";
@@ -10,7 +9,6 @@ import { Button, Stack } from 'react-bootstrap';
 const Profile = () => {
   const { loading, user, logout, isAuthenticated } = useAuth0();
   const [classCount, setClassCount] = useState(0)
-  // let classcount = 0
   
   useEffect(() => {
     async function getClasses () {
@@ -45,6 +43,5 @@ const Profile = () => {
     </Stack>
   );
 };
-    {/*className="d-flex flex-column align-content-center"*/}
 
 export default Profile;

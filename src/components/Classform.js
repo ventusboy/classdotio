@@ -1,19 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Button, Collapse } from "react-bootstrap";
-import { useAuth0 } from "../react-auth0-spa";
-
-const initstate = {
-    name: '',
-    classcode: '',
-    preReqs: '',
-    nameError: '',
-    classcodeError: '',
-    prereqError: '',
-    value: '',
-    //valid: false
-    valid: true,
-    dropdowndb: [1, 2, 3]
-}
 
 function Classform(props) {
     const [name, setName] = useState('')
@@ -24,9 +10,6 @@ function Classform(props) {
     const [classCodeError, setClassCodeError] = useState('')
     const [nameError, setNameError] = useState('')
     const [open, setOpen] = useState(false);
-
-
-    const { user } = useAuth0();
 
     window.addEventListener('resize', () => {
         if (window.innerWidth > 576) {
@@ -110,23 +93,6 @@ function Classform(props) {
         }
 
         return valid
-
-    }
-    function onFocus() {
-        document.querySelector('.dropdown-container').removeClass("hide");
-        document.querySelector("#name").keyup(function keymove(e) {
-
-            if (e.which === 40) {
-                console.log('yeet!');
-            }
-        });
-    }
-
-    function onBlur() {
-        document.querySelector("document").ready(() => {
-            document.querySelector('.dropdown-container').addClass("hide");
-            document.querySelector('#name').unbind("keyup");
-        });
 
     }
 
@@ -218,9 +184,9 @@ function Classform(props) {
 function Dropdown(props) {
     let type = props.type;
     let filtereditems = props.list?.filter((item) => {
-        if (type == 'name')
+        if (type === 'name')
             return item.name;
-        else if (type == 'code')
+        else if (type === 'code')
             return item.area + ' ' + item.code;
     });
 

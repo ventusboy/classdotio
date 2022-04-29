@@ -50,7 +50,7 @@ function App() {
 				</Router>
 			</div>
 			<footer>
-				<h4 className='bottom-brand'>Made by <a href="https://www.mikalyoung.com/" target="_blank" rel="noopener noreferrer">Mikal Young</a></h4>
+				<h4 className='bottom-brand ps-2'>Made by <a href="https://www.mikalyoung.com/" target="_blank" rel="noopener noreferrer">Mikal Young</a></h4>
 			</footer>
 		</div >
 	);

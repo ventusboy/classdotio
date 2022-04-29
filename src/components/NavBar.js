@@ -1,6 +1,6 @@
 // src/components/NavBar.js
 
-import React, { Fragment, useRef, useState } from "react";
+import React, { Fragment, useState } from "react";
 import { useAuth0 } from "../react-auth0-spa";
 import { NavLink, useLocation } from "react-router-dom";
 import { Collapse } from "react-bootstrap";
