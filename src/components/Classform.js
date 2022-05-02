@@ -128,12 +128,9 @@ function Classform(props) {
                                     className={nameError ? 'form-control incorrect' : 'form-control'}
                                     value={name}
                                     onChange={handleNameChange}
-                                    list="options"
                                 ></input>
 
                                 <div className="errorMsg">{valid ? '' : nameError}</div>
-                                {name !== '' ? <
-                                    Dropdown list={dropdowndb} type={"name"} /> : ''}
                             </div>
                             <div className="mb-2">
                                 <label htmlFor="classcode">Class Code</label>
@@ -143,9 +140,12 @@ function Classform(props) {
                                     className={classCodeError ? 'form-control incorrect' : 'form-control'}
                                     value={classCode}
                                     onChange={codeChange}
+                                    list="options"
                                 ></input>
 
                                 <div className="errorMsg">{valid ? '' : classCodeError}</div>
+                                {classCode !== '' ? <
+                                    Dropdown classes={props.classes} type={"code"} /> : ''}
                             </div>
 
 
@@ -181,31 +181,20 @@ function Classform(props) {
     );
 }
 
-function Dropdown(props) {
-    let type = props.type;
-    let filtereditems = props.list?.filter((item) => {
-        if (type === 'name')
-            return item.name;
-        else if (type === 'code')
-            return item.area + ' ' + item.code;
+function Dropdown({ classes }) {
+    console.log(classes)
+    let filteredItems = classes?.map((item) => {
+        return <option key={item.area + item.code} value={item.area + ' ' + item.code} />;
     });
+    console.log(filteredItems)
 
-
-    const items = filtereditems?.map((item) => {
-
-
-        return <option value={item.name} />
-
-
-    });
-    if (items?.length !== 0) {
+    if (filteredItems?.length !== 0) {
         return (
             <datalist id="options">
-                {items}
+                {filteredItems}
             </datalist>
         );
-    }
-    else {
+    } else {
         return '';
     }
 

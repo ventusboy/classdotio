@@ -11,10 +11,13 @@
     padding: 1em;
     border-radius: 1em;
     /* margin: .1em !important;*/
-    .deletebtn{
+    .deletebtn, .editbtn{
         height: 30px;
         opacity: .2;
         cursor: pointer;
+        &:nth-child(1){
+            margin-right: 10px;
+        }
         &:hover{
             opacity: 1;
         }

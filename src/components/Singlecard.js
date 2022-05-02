@@ -12,6 +12,10 @@ function Singlecard (props) {
         props.removeClass(item);
     }
 
+    function onEdit(item) {
+        props.editClass(item)
+    }
+
     useEffect(() => {
         if (item.completed) {
             setStatus('blue')
@@ -40,6 +44,7 @@ function Singlecard (props) {
                     <h4 className="col-xl-7 col-sm-6 text-capitalize">{item.name}</h4>
                 </div>
                 <div className="col-2 col-xl-1 col-sm-2 d-flex justify-content-end">
+                    <img className="editbtn" src="./assets/edit.png" onClick={() => { onEdit() }}  alt="Edit Icon"  />
                     <img className="deletebtn" src="./assets/delete.svg" onClick={() => { onDelete() }}  alt="Delete Icon"  />
                 </div>
             </div>

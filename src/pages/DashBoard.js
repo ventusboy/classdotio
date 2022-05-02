@@ -37,6 +37,18 @@ function DashBoard(props) {
         }
         return
     }
+    
+
+    function editClass(classInfo) {
+        try {
+            // await axios.post('/submit', classInfo)
+            setUserClasses([...userClasses, classInfo])
+            setChanges(changes + 1)
+        } catch (error) {
+            console.log(error)
+        }
+        return
+    }
 
     async function removeClass(obj) {
         setUserClasses(userClasses.filter(item => item.area + item.code !== obj.area + obj.code))
@@ -47,7 +59,7 @@ function DashBoard(props) {
     return (
         <div id="dashboard" className="d-flex flex-grow-1 container-fluid mt-3" >
             <div className="row flex-column flex-md-row flex-grow-1 justify-content-center justify-content-md-evenly g-3">
-                <Classform user={props.user} submitNewClass={submitNewClass} />
+                <Classform user={props.user} classes={userClasses} submitNewClass={submitNewClass} />
                 <ClassesContext.Provider value={completedClasses}>
                     <Classes user={props.user} classes={userClasses} removeClass={removeClass} /> 
                 </ClassesContext.Provider>
