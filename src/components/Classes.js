@@ -26,6 +26,7 @@ function Classes(props) {
                             classes={props.classes}
                             removeClass={props.removeClass}
                             searchText={searchText}
+                            editClass={props.editClass}
                         />
                     </div>
                 </div>
@@ -50,7 +51,7 @@ function ClassList(props) {
     }
 
     classes = classes.map((item) => {
-        return <Singlecard key={item.area + item.code} removeClass={props.removeClass} item={item} />
+        return <Singlecard key={item.area + item.code} removeClass={props.removeClass} item={item} editClass={props.editClass} />
     });
 
     return classes;

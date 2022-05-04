@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button, Collapse } from "react-bootstrap";
 
 function Classform(props) {
@@ -6,10 +6,12 @@ function Classform(props) {
     const [classCode, setClassCode] = useState('')
     const [completed, setCompleted] = useState(false)
     const [valid, setValid] = useState(true)
-    const [dropdowndb, setDropdowndb] = useState([])
     const [classCodeError, setClassCodeError] = useState('')
     const [nameError, setNameError] = useState('')
+    const [preReqsError, setPreReqsError] = useState('')
     const [open, setOpen] = useState(false);
+    const [preReqs, setPreReqs] = useState('')
+
 
     window.addEventListener('resize', () => {
         if (window.innerWidth > 576) {
@@ -24,6 +26,16 @@ function Classform(props) {
         }
     }
 
+    useEffect(() => {
+        let { name, area, code, preReqs, completed } = props.editedClass
+        if (area && code){
+            setName(name)
+            setClassCode(area + ' ' + code)
+            setCompleted(completed)
+            setPreReqs(Array.isArray(preReqs) && preReqs.map(item => item.area + item.code).join(","))
+        }
+    }, [props.editedClass])
+
 
     function codeChange(event) {
         setClassCode(event.target.value);
@@ -32,30 +44,35 @@ function Classform(props) {
         }
     }
 
+    function preReqsChange (event) {
+        setPreReqs(event.target.value)
+        setPreReqsError('')
+    }
+
     function formatPreReqs() {
-        let items = document.getElementById('preReqs').value
+        let items = preReqs
         if (items.length > 6) {
             items = items.toUpperCase().replace(/\s+/g, '').split(",")
         } else {
             return []
         }
-        items = items.map((item) => {
-            try {
+        try {
+            items = items.map((item) => {
                 let index = item.search(/\d/)
                 let area = item.substring(0, index)
                 let code = item.substring(index)
-                if (area.length !== 3 || code.length > 5) {
-                    throw (Error('Prerequisite area or code is incorrect'))
+                if (area.length !== 3 || code.length > 5 || code.length < 3) {
+                    throw(Error('Error parsing a PreReq'))
                 }
                 return {
                     area,
                     code
                 }
-            } catch (error) {
-                console.log(error)
-                return { error }
-            }
-        })
+            })
+        } catch (error) {
+            return { error }
+        }
+        
         return items
     }
 
@@ -69,31 +86,31 @@ function Classform(props) {
                 preReqs,
                 completed
             })
+        } else {
+            return
         }
         setName('');
         setClassCode('');
-        document.getElementById('preReqs').value = ''
+        setPreReqs('')
 
     }
     function validate(preReqs) {
+        let tempValid = true
         if (!name) {
-
             setNameError("Name cannot be empty")
-            setValid(false);
+            tempValid = false
         }
         if (!classCode) {
             setClassCodeError("Class code cannot be empty")
-            setValid(false)
+            tempValid = false
         }
-        if (preReqs.length > 0) {
-            preReqs.forEach((item) => {
-                if (item.error)
-                    setValid(false)
-            })
+        if (preReqs?.error) {
+            setPreReqsError('Error parsing a PreReq')
+            tempValid = false
         }
 
-        return valid
-
+        setValid(tempValid)
+        return tempValid
     }
 
     return (
@@ -130,7 +147,7 @@ function Classform(props) {
                                     onChange={handleNameChange}
                                 ></input>
 
-                                <div className="errorMsg">{valid ? '' : nameError}</div>
+                                <div className="errorMsg">{nameError || ''}</div>
                             </div>
                             <div className="mb-2">
                                 <label htmlFor="classcode">Class Code</label>
@@ -143,7 +160,7 @@ function Classform(props) {
                                     list="options"
                                 ></input>
 
-                                <div className="errorMsg">{valid ? '' : classCodeError}</div>
+                                <div className="errorMsg">{classCodeError || ''}</div>
                                 {classCode !== '' ? <
                                     Dropdown classes={props.classes} type={"code"} /> : ''}
                             </div>
@@ -157,7 +174,8 @@ function Classform(props) {
                                     id="completed"
                                     className=""
                                     style={{ marginLeft: '20px' }}
-                                    onClick={() => {
+                                    checked={completed}
+                                    onChange={() => {
                                         setCompleted(!completed)
                                     }}
                                 ></input>
@@ -165,7 +183,15 @@ function Classform(props) {
 
                             <div className="mb-2">
                                 <label htmlFor="preReqs">Pre-req(s):</label>
-                                <input type="text" id="preReqs" className="form-control"></input>
+                                <input 
+                                    type="text"
+                                    id="preReqs" 
+                                    className="form-control"
+                                    value={preReqs}
+                                    onChange={preReqsChange}
+                                ></input>
+                                
+                                <div className="errorMsg">{ preReqsError || '' }</div>
                             </div>
 
                             <br></br>
@@ -182,11 +208,9 @@ function Classform(props) {
 }
 
 function Dropdown({ classes }) {
-    console.log(classes)
     let filteredItems = classes?.map((item) => {
         return <option key={item.area + item.code} value={item.area + ' ' + item.code} />;
     });
-    console.log(filteredItems)
 
     if (filteredItems?.length !== 0) {
         return (

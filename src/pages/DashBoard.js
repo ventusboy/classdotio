@@ -9,6 +9,7 @@ function DashBoard(props) {
     const [userClasses, setUserClasses] = useState([])
     const [changes, setChanges] = useState(0)
     const [completedClasses, setCompletedClasses] = useState([])
+    const [editedClass, setEditedClass] = useState({})
     axios.defaults.headers.common['sub'] = props.user.sub;
 
 
@@ -40,10 +41,9 @@ function DashBoard(props) {
     
 
     function editClass(classInfo) {
+        console.log(classInfo)
         try {
-            // await axios.post('/submit', classInfo)
-            setUserClasses([...userClasses, classInfo])
-            setChanges(changes + 1)
+            setEditedClass(classInfo)
         } catch (error) {
             console.log(error)
         }
@@ -59,9 +59,9 @@ function DashBoard(props) {
     return (
         <div id="dashboard" className="d-flex flex-grow-1 container-fluid mt-3" >
             <div className="row flex-column flex-md-row flex-grow-1 justify-content-center justify-content-md-evenly g-3">
-                <Classform user={props.user} classes={userClasses} submitNewClass={submitNewClass} />
+                <Classform user={props.user} classes={userClasses} submitNewClass={submitNewClass} editedClass={editedClass} />
                 <ClassesContext.Provider value={completedClasses}>
-                    <Classes user={props.user} classes={userClasses} removeClass={removeClass} /> 
+                    <Classes user={props.user} classes={userClasses} removeClass={removeClass} editClass={editClass} /> 
                 </ClassesContext.Provider>
             </div>
         </div>

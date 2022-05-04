@@ -12,7 +12,8 @@ function Singlecard (props) {
         props.removeClass(item);
     }
 
-    function onEdit(item) {
+    function onEdit() {
+        console.log(item)
         props.editClass(item)
     }
 
@@ -24,11 +25,9 @@ function Singlecard (props) {
         else {
             for (let i = 0; i < item.preReqs.length; i++) {
                 let { area, code } = item.preReqs[i]
-                if (classes?.includes(area + code)) {
-                    continue                 
-                } else if (i === item.preReqs.length - 1) {
+                if (!classes?.includes(area + code)) {
                     setStatus('red')
-                    return
+                    return                 
                 }
             }
             setStatus('yellow')
