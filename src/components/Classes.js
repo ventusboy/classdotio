@@ -36,6 +36,7 @@ function Classes(props) {
 }
 
 function ClassList(props) {
+    console.log(props)
     let classes = props.classes || [] 
     let searchText = props.searchText.toLocaleLowerCase()
     classes = classes.sort((a, b) => {
