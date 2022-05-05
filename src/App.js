@@ -3,7 +3,7 @@ import { Route, Router, Switch } from "react-router-dom";
 import Home from "./components/Home.js";
 import NavBar from "./components/NavBar";
 import PrivateRoute from "./components/PrivateRoute";
-import Profile from "./components/Profile";
+import Profile from "./pages/Profile";
 import DashBoard from './pages/DashBoard';
 import { useAuth0 } from "./react-auth0-spa";
 import history from "./utils/history";
