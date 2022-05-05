@@ -24,8 +24,6 @@ function DashBoard(props) {
     useEffect(() => {
         let array = userClasses.flatMap(element => element.completed ? element.area + element.code : [])
         setCompletedClasses(array)
-        // console.log(array)
-
     },[userClasses])
 
     async function submitNewClass(classInfo) {
@@ -41,7 +39,6 @@ function DashBoard(props) {
     
 
     function editClass(classInfo) {
-        console.log(classInfo)
         try {
             setEditedClass(classInfo)
         } catch (error) {

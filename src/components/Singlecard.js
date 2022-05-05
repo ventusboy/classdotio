@@ -13,7 +13,6 @@ function Singlecard (props) {
     }
 
     function onEdit() {
-        console.log(item)
         props.editClass(item)
     }
 

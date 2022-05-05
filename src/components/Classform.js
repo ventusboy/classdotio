@@ -33,6 +33,7 @@ function Classform(props) {
             setClassCode(area + ' ' + code)
             setCompleted(completed)
             setPreReqs(Array.isArray(preReqs) && preReqs.map(item => item.area + item.code).join(","))
+            setOpen(true)
         }
     }, [props.editedClass])
 
@@ -126,7 +127,6 @@ function Classform(props) {
                         aria-expanded="false"
                         aria-controls="formCollapse"
                         onClick={() => {
-                            console.log('opening')
                             setOpen(!open)}
                         }
                     >

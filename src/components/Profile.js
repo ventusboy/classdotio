@@ -33,11 +33,11 @@ const Profile = () => {
   return (
     <Stack gap={2} className="mt-4">
       {user.picture && <img src={user.picture} alt="Profile" className="align-self-center" style={{ height: "100px", width: "100px"}} referrerPolicy="no-referrer" />}
-      <h2 class="text-center">User: {user.name}</h2>
-      <h4 class="text-center">Email: {user.email}</h4>
-      <h4 class="text-center">Classes Added: {classCount}</h4>
+      <h2 className="text-center">User: {user.name}</h2>
+      <h4 className="text-center">Email: {user.email}</h4>
+      <h4 className="text-center">Classes Added: {classCount}</h4>
       {/*<code>{JSON.stringify(user, null, 2)}</code>*/}
-      <div class="text-center">
+      <div className="text-center">
         {isAuthenticated && <Button variant="outline-primary" size="sm" onClick={() => logout({ returnTo: window.location.origin })}>Log out</Button>}
       </div>
     </Stack>

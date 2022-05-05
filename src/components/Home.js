@@ -3,7 +3,6 @@ import React, { Fragment } from "react";
 
 const Home = () => {
     //const { isAuthenticated } = useAuth0();
-    console.log("Home");
     return (
         <Fragment>
             <div className="mainbody container-fluid">
