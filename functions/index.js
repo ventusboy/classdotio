@@ -1,4 +1,6 @@
 const functions = require("firebase-functions");
+const admin = require("firebase-admin");
+admin.initializeApp();
 
 // // Create and Deploy Your First Cloud Functions
 // // https://firebase.google.com/docs/functions/write-firebase-functions
@@ -7,11 +9,9 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const path = require('path');
 
-const { initializeApp, applicationDefault, cert } = require('firebase-admin/app');
+// const { initializeApp, applicationDefault, cert } = require('firebase-admin');
 const { getFirestore, Timestamp, FieldValue } = require('firebase-admin/firestore');
-// const { app } = require("firebase-admin");
 
-initializeApp();
 const db = getFirestore();
 
 const app = express();
