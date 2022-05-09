@@ -36,8 +36,7 @@ function Classes(props) {
 }
 
 function ClassList(props) {
-    console.log(props)
-    let classes = props.classes || [] 
+    let classes = props.classes || []
     let searchText = props.searchText.toLocaleLowerCase()
     classes = classes.sort((a, b) => {
         if (b.area === a.area){
@@ -55,7 +54,7 @@ function ClassList(props) {
         return <Singlecard key={item.area + item.code} removeClass={props.removeClass} item={item} editClass={props.editClass} />
     });
 
-    return classes;
+    return <>{classes}</>;
 }
 
 

@@ -8,8 +8,8 @@
     ],
     "rewrites": [
       {
-        "source": "**",
-        "destination": "/index.html"
+        "source": "/app/**",
+        "function": "app"
       }
     ]
   },
@@ -20,6 +20,9 @@
     "hosting": {
       "port": 5000,
       "host": "0.0.0.0"
+    },
+    "functions": {
+      "port": 5001
     }
   }
 }

@@ -1,13 +1,9 @@
 import React, { Fragment } from "react";
-//import { useAuth0 } from "../react-auth0-spa";
 
 const Home = () => {
-    //const { isAuthenticated } = useAuth0();
     return (
         <Fragment>
             <div className="mainbody container-fluid">
-
-
                 <div className="row d-flex justify-content-center">
                     <h1 className="col-6 text-center">
                         Welcome To Class.io

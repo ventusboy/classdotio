@@ -6,6 +6,8 @@ import axios from "axios";
 import { useState } from 'react';
 import { Button, Stack } from 'react-bootstrap';
 
+const hostURL = process.env.REACT_APP_HOST_URL || ''
+
 const Profile = () => {
   const { loading, user, logout, isAuthenticated } = useAuth0();
   const [classCount, setClassCount] = useState(0)
@@ -13,7 +15,7 @@ const Profile = () => {
   useEffect(() => {
     async function getClasses () {
       try {
-        let { data } = await axios.post('/getUserInfo')
+        let { data } = await axios.post(`${hostURL}/app/getUserInfo`)
         setClassCount(data.length)
       } catch (error) {
         console.log("error retrieving user data.")

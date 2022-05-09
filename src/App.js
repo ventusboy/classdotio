@@ -59,8 +59,4 @@ function App() {
 
 
 
-//import trashIcon from './assets/delete.svg';
-
-
-
 export default App;

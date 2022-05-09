@@ -4,6 +4,9 @@ import Classform from "../components/Classform"
 import Classes from "../components/Classes"
 const ClassesContext = createContext(null)
 
+const hostURL = process.env.REACT_APP_HOST_URL || ''
+
+
 
 function DashBoard(props) {
     const [userClasses, setUserClasses] = useState([])
@@ -15,7 +18,7 @@ function DashBoard(props) {
 
     useEffect(() => {
         async function getClasses() {
-            let { data } = await axios.post('/getUserInfo')
+            let { data } = await axios.post(`${hostURL}/app/getUserInfo`)
             setUserClasses(data)
         }
         getClasses()
@@ -28,7 +31,7 @@ function DashBoard(props) {
 
     async function submitNewClass(classInfo) {
         try {
-            await axios.post('/submit', classInfo)
+            await axios.post(`${hostURL}/app/submit`, classInfo)
             setUserClasses([...userClasses, classInfo])
             setChanges(changes + 1)
         } catch (error) {
@@ -49,7 +52,7 @@ function DashBoard(props) {
 
     async function removeClass(obj) {
         setUserClasses(userClasses.filter(item => item.area + item.code !== obj.area + obj.code))
-        await axios.post('/delete', obj)
+        await axios.post(`${hostURL}/app/delete`, obj)
         setChanges(changes + 1)
     }
 
