@@ -18,13 +18,10 @@ const app = express();
 const main = express()
 main.use('/app', app)
 
-// app.use(express.static(path.join(__dirname, 'build')));
-// app.use(express.static('src'));
 app.use(bodyParser.json());
 
 app.get('*', (req, res) => {
-  // res.send('Page does not exist')
-  res.send(req.url)
+  res.send(`url: ${req.url} does not exist`)
 })
 
 app.post('/getUserInfo', async function (req, res) {
